@@ -1,0 +1,93 @@
+---
+title: "data_wrangling"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+
+data <- read.csv("~/git/Blog-proj/COVID_W3_delivered.csv")
+
+data_vars <- data %>%
+  select(ECON4A, ECON4B, HHINCOME, EDUCATION, AGE7)
+
+head(data_vars)
+```
+
+```{r}
+kmeans_data <- data_vars %>%
+  filter(ECON4A != "(77) DON'T KNOW", ECON4A != "(98) SKIPPED ON WEB", ECON4A != "(99) REFUSED",
+         ECON4B != "(77) DON'T KNOW", ECON4B != "(98) SKIPPED ON WEB", ECON4B != "(99) REFUSED",
+         HHINCOME != "DON'T KNOW", HHINCOME != "SKIPPED ON WEB", HHINCOME != "REFUSED",
+         EDUCATION != "(77) Not sure", EDUCATION != "(98) SKIPPED ON WEB", EDUCATION != "(99) REFUSED",
+         AGE7 != "(88) Removed for disclosure risk") %>%
+  mutate(ECON4A = case_when(
+    ECON4A == "(1) Extremely likely" ~ "1",
+    ECON4A == "(2) Very likely" ~ "2",
+    ECON4A == "(3) Moderately likely" ~ "3",
+    ECON4A == "(4) Not too likely" ~ "4",
+    ECON4A == "(5) Not likely at all" ~ "5",
+    TRUE ~ ECON4A
+    )) %>%
+   mutate(ECON4B = case_when(
+    ECON4B == "(1) Extremely likely" ~ "1",
+    ECON4B == "(2) Very likely" ~ "2",
+    ECON4B== "(3) Moderately likely" ~ "3",
+    ECON4B == "(4) Not too likely" ~ "4",
+    ECON4B == "(5) Not likely at all" ~ "5",
+    TRUE ~ ECON4B
+    )) %>%
+  mutate(HHINCOME = case_when(
+    HHINCOME == "Under $10,000" ~ "1",
+    HHINCOME == "$10,000 to under $20,000" ~ "2",
+    HHINCOME == "$20,000 to under $30,000" ~ "3",
+    HHINCOME == "$30,000 to under $40,000" ~ "4",
+    HHINCOME == "$40,000 to under $50,000" ~ "5",
+    HHINCOME == "$50,000 to under $75,000" ~ "6",
+    HHINCOME == "$75,000 to under $100,000" ~ "7",
+    HHINCOME == "$100,000 to under $150,000" ~ "8",
+    HHINCOME == "$150,000 or more" ~ "9",
+    TRUE ~ HHINCOME
+  )) %>%
+  mutate(EDUCATION = case_when(
+    EDUCATION == "(1) No HS diploma" ~ "1",
+    EDUCATION == "(2) HIGH SCHOOL GRADUATE - high school DIPLOMA or the equivalent (GED)" ~ "2",
+    EDUCATION == "(3) Some college, no degree" ~ "3",
+    EDUCATION == "(4) Associate degree" ~ "4",
+    EDUCATION == "(5) Bachelors degree" ~ "5",
+    EDUCATION == "(6) Masters degree" ~ "6",
+    EDUCATION == "(7) Professional or Doctorate degree" ~ "7",
+    TRUE ~ EDUCATION
+  )) %>%
+  mutate(AGE7 = case_when(
+    AGE7 == "(1) 18-24" ~ "1",
+    AGE7 == "(2) 25-34" ~ "2",
+    AGE7 == "(3) 35-44" ~ "3",
+    AGE7 == "(4) 45-54" ~ "4",
+    AGE7 == "(5) 55-64" ~ "5",
+    AGE7 == "(6) 65-74" ~ "6",
+    AGE7 == "(7) 75+" ~ "7",
+    AGE7 == "(99) Under 18" ~ "8",
+    TRUE ~ AGE7
+  )) %>%
+  mutate(ECON4A = as.numeric(ECON4A)) %>%
+  mutate(ECON4B = as.numeric(ECON4B)) %>%
+  mutate(HHINCOME = as.numeric(HHINCOME)) %>%
+  mutate(EDUCATION = as.numeric(EDUCATION)) %>%
+  mutate(AGE7 = as.numeric(AGE7))
+
+head(kmeans_data)
+
+unique(kmeans_data$ECON4A)
+unique(kmeans_data$ECON4B)
+unique(kmeans_data$HHINCOME)
+unique(kmeans_data$EDUCATION)
+unique(kmeans_data$AGE7)
+
+write_csv(kmeans_data, file="kmeans_data.csv")
+```
+
