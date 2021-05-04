@@ -15,6 +15,11 @@ data <- read.csv("~/git/Blog-proj/COVID_W3_delivered.csv")
 data_vars <- data %>%
   select(ECON4A, ECON4B, HHINCOME, EDUCATION, AGE7)
 
+data_vars2 <- data %>% 
+  select(ECON6A, ECON6C, ECON7_1, ECON7_2, ECON7_3, ECON7_4, 
+         ECON7_5, ECON7_6, ECON7_7, ECON7_8, ECON5A_B, GENDER, 
+         RACETH, P_DENSE)
+
 head(data_vars)
 ```
 
@@ -89,5 +94,9 @@ unique(kmeans_data$EDUCATION)
 unique(kmeans_data$AGE7)
 
 write_csv(kmeans_data, file="kmeans_data.csv")
+```
+
+```{r}
+
 ```
 
