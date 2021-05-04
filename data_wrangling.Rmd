@@ -7,21 +7,62 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# COVID-19 Impact on Individual Economic Health in the US: Part 2
+
+We plan on extending our mid-semester project using the data from the COVID Impact Survey. We do not plan on adding additional data, but need to wrangle our data so that all of the relevant variables are in the right format in one dataset. We will first use unsupervised learning to determine how respondents of the COVID impact survey cluster based on demographic and economic health variables. Then, we will see how other demographic and economic health variables can predict cluster assignment. 
+
+As of right now, our final project will primarily consist of our clustering model and a comparison of these clusters with different demographic and economic health variables. We’re also planning on including some visualizations (most likely stacked bar graphs) to illustrate how the clusters relate to these other variables.
+
+Data: The COVID Impact Survey was an independent, non-governmental survey carried out by the Data Foundation in late spring of 2020 focusing on physical health, economic and food security, and employment. The data is publicly available in a csv format: https://www.covid-impact.org/results.
+
+Variables: 
+Our demographic variables of interest are...
+
+* AGE7 - Age: 7 category
+* GENDER - Are you male or female?
+* RACETH - Race/ethnicity
+* HHINCOME - Household income
+* EDUCATION - What is the highest level of school you have completed?
+* P_DENSE - Population density
+
+Our economic variables of interest are... 
+
+* ECON4A - Think about 30 days from now, how likely do you think it is that you will be employed at that time?
+* ECON4B - Think about 3 months from now, how likely do you think it is that you will be employed at that time?
+* ECON6A - [Unemployment insurance] In the past 7 days, have you either received, applied for, or tried to apply for any of the following forms of income or assistance, or not?
+* ECON6C - [TANF (Temporary Assistance for Needy Families)] In the past 7 days, have you either received, applied for, or tried to apply for any of the following forms of income or assistance, or not?
+* ECON7_1 - [Put it on my credit card and pay it off in full at the next statement] Based on your current financial situation, how would you pay for this expense?
+* ECON7_2 - [Put it on my credit card and pay it off over time] Based on your current financial situation, how would you pay for this expense?
+* ECON7_3 - [Use money currently in my checking or savings account or with cash] Based on your current financial situation, how would you pay for this expense?
+* ECON7_4 - [Use money from a bank loan or line of credit] Based on your current financial situation, how would you pay for this expense?
+* ECON7_5 - [Borrow from a friend or family member] Based on your current financial situation, how would you pay for this expense?
+* ECON7_6 - [Use a payday loan, deposit advance or overdraft] Based on your current financial situation, how would you pay for this expense?
+* ECON7_7 - [Sell something] Based on your current financial situation, how would you pay for this expense?
+* ECON7_8 - [I would not be able to pay for it right now] Based on your current financial situation, how would you pay for this expense?
+* ECON7_REF - [REFUSED] Based on your current financial situation, how would you pay for this expense?
+* ECON5A_B - [The food that we bought just didn't last, and we didn't have money to get more] Please indicate whether the following statements were often true, sometimes true, or never true for you or your household over the past 30 days.
+
+Loading the COVID Impact Data:
+
 ```{r}
 library(tidyverse)
 
-data <- read.csv("~/git/Blog-proj/COVID_W3_delivered.csv")
+data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/COVID_W3_delivered.csv")
 
 data_vars <- data %>%
   select(ECON4A, ECON4B, HHINCOME, EDUCATION, AGE7)
 
 data_vars2 <- data %>% 
-  select(ECON6A, ECON6C, ECON7_1, ECON7_2, ECON7_3, ECON7_4, 
-         ECON7_5, ECON7_6, ECON7_7, ECON7_8, ECON5A_B, GENDER, 
-         RACETH, P_DENSE)
+  select(ECON6A, ECON6C, ECON7_1, ECON7_2, ECON7_3, ECON7_4, ECON7_5, ECON7_6, ECON7_7, 
+         ECON7_8, ECON7_REF, ECON7_DK, ECON7_SKP, ECON5A_B, GENDER, RACETH, P_DENSE, SU_ID)
 
 head(data_vars)
+head(data_vars2)
 ```
+
+\newpage
+
+# Wranging for clustering analysis
 
 ```{r}
 kmeans_data <- data_vars %>%
@@ -96,7 +137,60 @@ unique(kmeans_data$AGE7)
 write_csv(kmeans_data, file="kmeans_data.csv")
 ```
 
-```{r}
+\newpage
 
+# Wranging for post-clustering analysis
+
+```{r}
+other_vars_data <- data_vars2 %>% 
+  select(SU_ID, ECON6A, ECON6C, ECON5A_B, GENDER, RACETH, P_DENSE) %>% 
+  separate(GENDER, into = c(NA, "GENDER2"), sep = " ", remove = TRUE, extra = "merge") %>%
+  separate(RACETH, into = c(NA, "RACETH2"), sep = " ", remove = TRUE, extra = "merge") %>%
+  separate(P_DENSE, into = c(NA, "P_DENSE2"), sep = " ", remove = TRUE, extra = "merge") %>%
+  separate(ECON6A, into = c(NA, "ECON6A_2"), sep = " ", remove = TRUE, extra = "merge") %>%
+  separate(ECON6C, into = c(NA, "ECON6C_2"), sep = " ", remove = TRUE, extra = "merge") %>%
+  separate(ECON5A_B, into = c(NA, "ECON5A_B2"), sep = " ", remove = TRUE, extra = "merge") %>%
+  filter(GENDER2 != "SKIPPED ON WEB",
+         RACETH2 != "REFUSED", RACETH2 != "Removed for disclosure risk", 
+         RACETH2 != "SKIPPED ON WEB",
+         ECON6A_2 != "SKIPPED ON WEB", ECON6A_2 != "REFUSED", ECON6A_2 != "DON'T KNOW",
+         ECON6C_2 != "SKIPPED ON WEB", ECON6C_2 != "REFUSED", ECON6C_2 != "DON'T KNOW",
+         ECON5A_B2 != "SKIPPED ON WEB", ECON5A_B2 != "REFUSED", ECON5A_B2 != "DON'T KNOW") %>%
+  mutate(ECON6A_2 = case_when(
+    ECON6A_2 == "Did not receive nor apply for any" ~ "Did not apply",
+    ECON6A_2 == "Applied for" ~ "Applied",
+    ECON6A_2 == "Tried to apply for" ~ "Tried to apply",
+    TRUE ~ ECON6A_2
+  )) %>%
+  mutate(ECON6C_2 = case_when(
+    ECON6C_2 == "Did not receive nor apply for any" ~ "Did not apply",
+    ECON6C_2 == "Applied for" ~ "Applied",
+    ECON6C_2 == "Tried to apply for" ~ "Tried to apply",
+    TRUE ~ ECON6C_2))
+
+# re-format cost question
+cost_question <- data_vars2 %>%
+  select(SU_ID, ECON7_1, ECON7_2, ECON7_3, ECON7_4, ECON7_5, ECON7_6,
+         ECON7_7, ECON7_8, ECON7_REF, ECON7_DK, ECON7_SKP) %>%
+  mutate_if(is.factor, as.character)
+
+cost_question[cost_question == "(0) No"] <- "0"
+cost_question[cost_question == ("(1) Yes")] <- "1"
+
+cost_question_formatted <- cost_question %>%
+  mutate_if(is.character, as.numeric) %>%
+  pivot_longer(-SU_ID, names_to = "question", values_to = "answer") %>%
+  filter(answer==1) %>%
+  select(SU_ID, question) %>%
+  group_by(SU_ID) %>%
+  summarise(
+    question = toString(question)
+  )
+
+# final dataset with additional vars to use in post-cluster analysis
+post_cluster_data <- inner_join(other_vars_data, cost_question_formatted, by = "SU_ID")
+
+head(post_cluster_data)
+write_csv(post_cluster_data, file="post_cluster_data.csv")
 ```
 
