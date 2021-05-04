@@ -63,7 +63,7 @@ head(data_vars2)
 
 \newpage
 
-# Wranging for clustering analysis
+# Wranging for Clustering Analysis
 
 ```{r}
 kmeans_data <- data_vars %>%
@@ -140,7 +140,7 @@ write_csv(kmeans_data, file="kmeans_data.csv")
 
 \newpage
 
-# Wranging for post-clustering analysis
+# Wranging for Post-Cluster Analysis
 
 ```{r}
 other_vars_data <- data_vars2 %>% 
