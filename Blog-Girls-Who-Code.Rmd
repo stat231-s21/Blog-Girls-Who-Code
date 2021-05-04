@@ -1,0 +1,93 @@
+---
+title: "PUG Blog Project"
+authors: Maggie Smith & Sammy Phillips
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+library(ggrepel)
+library(GGally)
+```
+
+# COVID-19 Impact on Individual Economic Health
+
+This project explores the impact of COVID-19 on individual economic health. We used data collected by the COVID Impact Survey. The COVID Impact Survey was an independent, non-governmental survey carried out by the Data Foundation in late spring of 2020 focusing on physical health, economic and food security, and employment. The data is publicly available in a csv format: https://www.covid-impact.org/results.
+
+First, we will determine how respondents of the COVID Impact Survey group together based on various demographic and economic health questions using unsupervised learning and clustering. Then, we will examine the relationships between other demographic and economic health variables and cluster assignment.
+
+# Part 1: Clustering Analysis
+
+First, we perform kmeans clustering analysis with 2 clusters, 4, clusters, 7 clusters, and 11 clusters.
+
+```{r}
+kmeans_data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/kmeans_data.csv")
+
+set.seed(23)
+km2_out <- kmeans(kmeans_data, centers = 2, nstart = 20)
+km2_out$centers
+
+kmeans_data2 <- kmeans_data %>%
+  mutate(clust2 = as.character(km2_out$cluster))
+
+set.seed(23)
+km4_out <- kmeans(kmeans_data, centers = 4, nstart = 20)
+km4_out$centers
+
+kmeans_data2 <- kmeans_data2 %>%
+  mutate(clust4 = as.character(km4_out$cluster))
+
+set.seed(23)
+km7_out <- kmeans(kmeans_data, centers = 7, nstart = 20)
+km7_out$centers
+
+kmeans_data2 <- kmeans_data2 %>%
+  mutate(clust7 = as.character(km7_out$cluster))
+
+set.seed(23)
+km11_out <- kmeans(kmeans_data, centers = 11, nstart = 20)
+km11_out$centers
+
+kmeans_data2 <- kmeans_data2 %>%
+  mutate(clust11 = as.character(km11_out$cluster))
+
+```
+
+Next, we determine which clustering analysis is best. We do this by creating an elbow plot to determine how many clusters are needed to produce a small amount of total with-in cluster variation. This plot does not display a definitive elbow. However, the decrease in total with-in cluster variation begins to get smaller after 4 clusters. For this reason, our analysis with 4 clusters is likely our best kmeans clustering analysis. We will use this analysis for the rest of our investigation.
+
+```{r}
+fig <- matrix(NA, nrow=15, ncol=2)
+
+set.seed(75)
+for (i in 1:15){
+  fig[i,1] <- i
+  fig[i,2] <- kmeans(kmeans_data
+                    , centers=i
+                    , nstart=20)$tot.withinss
+}
+
+ggplot(data = as.data.frame(fig), aes(x = V1, y = V2)) +
+  geom_point() + 
+  geom_line() +
+  scale_x_continuous(breaks=c(1:15)) +
+  labs(x = "K", y = expression("Total W"[k]))
+```
+Finally, we can visualize our kmeans clustering analysis with 4 clusters below.
+
+```{r}
+vars <- c("ECON4A", "ECON4B", "HHINCOME", "EDUCATION", "AGE7")
+
+ggpairs(data = kmeans_data2
+        , aes(color = clust4) 
+        , columns = vars
+        , upper = list(continuous = "blank"))
+```
+
