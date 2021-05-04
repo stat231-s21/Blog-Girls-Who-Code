@@ -1,5 +1,6 @@
 ---
-title: "data_wrangling"
+title: "Data Wrangling"
+authors: Maggie Smith & Sammy Phillips
 output: html_document
 ---
 
