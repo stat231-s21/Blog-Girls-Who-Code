@@ -37,7 +37,7 @@ Our clustering analysis includes the following variables:
 * ECON4B - Think about 3 months from now, how likely do you think it is that you will be employed at that time?
 
 ```{r}
-kmeans_data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/kmeans_data.csv")
+kmeans_data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/kmeans_data.csv") 
 
 set.seed(23)
 km2_out <- kmeans(kmeans_data, centers = 2, nstart = 20)
@@ -129,20 +129,18 @@ The economic health variables of interest are:
 * ECON7_8 - [I would not be able to pay for it right now] Based on your current financial situation, how would you pay for this expense?
 * ECON5A_B - [The food that we bought just didn't last, and we didn't have money to get more] Please indicate whether the following statements were often true, sometimes true, or never true for you or your household over the past 30 days.
 
-First, we create scatter plots to explore the relationship between cluster assignment and our demographic variables of interest. 
+First, we create visualizations to explore the relationship between cluster assignment and our demographic variables of interest. 
 
 ```{r}
-post_cluster_data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/post_cluster_data.csv")
+post_cluster_data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/post_cluster_data.csv") %>% 
+  mutate(clust4 = as.character(km4_out$cluster))
 
-cluster_assignments <- kmeans_data2 %>% 
-  select(SU_ID, clust4)
+ggplot(post_cluster_data, aes(x = clust4, fill = GENDER2)) +
+  geom_histogram(stat = "count")
 
-post_cluster_data <- post_cluster_data %>% 
-  left_join(cluster_assignments, by = "SU_ID")
+ggplot(post_cluster_data, aes(x = clust4, fill = RACETH2)) +
+  geom_histogram(stat = "count")
 
-ggplot(data = post_cluster_data) 
-  geom_mosaic(aes(x = GENDER2))
-  
 ```
 
 
