@@ -51,11 +51,12 @@ library(tidyverse)
 data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/COVID_W3_delivered.csv")
 
 data_vars <- data %>%
-  select(ECON4A, ECON4B, HHINCOME, EDUCATION, AGE7)
+  select(ECON4A, ECON4B, HHINCOME, EDUCATION, AGE7, SU_ID)
 
 data_vars2 <- data %>% 
-  select(ECON6A, ECON6C, ECON7_1, ECON7_2, ECON7_3, ECON7_4, ECON7_5, ECON7_6, ECON7_7, 
-         ECON7_8, ECON7_REF, ECON7_DK, ECON7_SKP, ECON5A_B, GENDER, RACETH, P_DENSE, SU_ID)
+  select(ECON6A, ECON6C, ECON7_1, ECON7_2, ECON7_3, ECON7_4, ECON7_5, ECON7_6,
+         ECON7_7, ECON7_8, ECON7_REF, ECON7_DK, ECON7_SKP, ECON5A_B, GENDER, RACETH,
+         P_DENSE, SU_ID)
 
 head(data_vars)
 head(data_vars2)
