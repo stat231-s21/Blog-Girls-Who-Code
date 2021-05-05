@@ -16,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(ggrepel)
 library(GGally)
+library(ggmosaic)
 ```
 
 # COVID-19 Impact on Individual Economic Health
@@ -28,8 +29,15 @@ First, we will determine how respondents of the COVID Impact Survey group togeth
 
 First, we perform kmeans clustering analysis with 2 clusters, 4, clusters, 7 clusters, and 11 clusters.
 
+Our clustering analysis includes the following variables:
+* AGE7 - Age: 7 category
+* HHINCOME - Household income
+* EDUCATION - What is the highest level of school you have completed?
+* ECON4A - Think about 30 days from now, how likely do you think it is that you will be employed at that time?
+* ECON4B - Think about 3 months from now, how likely do you think it is that you will be employed at that time?
+
 ```{r}
-kmeans_data <- read.csv("~/git/Blog-proj/kmeans_data.csv")
+kmeans_data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/kmeans_data.csv")
 
 set.seed(23)
 km2_out <- kmeans(kmeans_data, centers = 2, nstart = 20)
@@ -87,6 +95,7 @@ ggplot(data = as.data.frame(fig), aes(x = V1, y = V2)) +
   scale_x_continuous(breaks=c(1:15)) +
   labs(x = "K", y = expression("Total W"[k]))
 ```
+
 Finally, we can visualize our kmeans clustering analysis with 4 clusters below.
 
 ```{r}
@@ -97,4 +106,43 @@ ggpairs(data = kmeans_data2
         , columns = vars
         , upper = list(continuous = "blank"))
 ```
+
+# Part 2: Post-Clustering Analysis
+
+Now, we want to explore the relationship between cluster assignment and a number of different demographic and economic health variables. 
+
+The demographic variables of interest are: 
+* GENDER - Are you male or female?
+* RACETH - Race/ethnicity
+* P_DENSE - Population density
+
+The economic health variables of interest are:
+* ECON6A - [Unemployment insurance] In the past 7 days, have you either received, applied for, or tried to apply for any of the following forms of income or assistance, or not?
+* ECON6C - [TANF (Temporary Assistance for Needy Families)] In the past 7 days, have you either received, applied for, or tried to apply for any of the following forms of income or assistance, or not?
+* ECON7_1 - [Put it on my credit card and pay it off in full at the next statement] Based on your current financial situation, how would you pay for this expense?
+* ECON7_2 - [Put it on my credit card and pay it off over time] Based on your current financial situation, how would you pay for this expense?
+* ECON7_3 - [Use money currently in my checking or savings account or with cash] Based on your current financial situation, how would you pay for this expense?
+* ECON7_4 - [Use money from a bank loan or line of credit] Based on your current financial situation, how would you pay for this expense?
+* ECON7_5 - [Borrow from a friend or family member] Based on your current financial situation, how would you pay for this expense?
+* ECON7_6 - [Use a payday loan, deposit advance or overdraft] Based on your current financial situation, how would you pay for this expense?
+* ECON7_7 - [Sell something] Based on your current financial situation, how would you pay for this expense?
+* ECON7_8 - [I would not be able to pay for it right now] Based on your current financial situation, how would you pay for this expense?
+* ECON5A_B - [The food that we bought just didn't last, and we didn't have money to get more] Please indicate whether the following statements were often true, sometimes true, or never true for you or your household over the past 30 days.
+
+First, we create scatter plots to explore the relationship between cluster assignment and our demographic variables of interest. 
+
+```{r}
+post_cluster_data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/post_cluster_data.csv")
+
+cluster_assignments <- kmeans_data2 %>% 
+  select(SU_ID, clust4)
+
+post_cluster_data <- post_cluster_data %>% 
+  left_join(cluster_assignments, by = "SU_ID")
+
+ggplot(data = post_cluster_data) 
+  geom_mosaic(aes(x = GENDER2))
+  
+```
+
 
