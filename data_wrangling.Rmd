@@ -54,7 +54,7 @@ data_vars <- data %>%
   select(ECON4A, ECON4B, HHINCOME, EDUCATION, AGE7)
 
 data_vars2 <- data %>% 
-  select(ECON6A, ECON6C, ECON7_1, ECON7_2, ECON7_3, ECON7_4, ECON7_5, ECON7_6,
+  select(AGE7, ECON6A, ECON6C, ECON7_1, ECON7_2, ECON7_3, ECON7_4, ECON7_5, ECON7_6,
          ECON7_7, ECON7_8, ECON7_REF, ECON7_DK, ECON7_SKP, ECON5A_B, GENDER, RACETH,
          P_DENSE, SU_ID)
 
@@ -145,19 +145,31 @@ write_csv(kmeans_data, file="kmeans_data.csv")
 
 ```{r}
 other_vars_data <- data_vars2 %>% 
-  select(SU_ID, ECON6A, ECON6C, ECON5A_B, GENDER, RACETH, P_DENSE) %>% 
+  select(AGE7, SU_ID, ECON6A, ECON6C, ECON5A_B, GENDER, RACETH, P_DENSE) %>% 
   separate(GENDER, into = c(NA, "GENDER2"), sep = " ", remove = TRUE, extra = "merge") %>%
   separate(RACETH, into = c(NA, "RACETH2"), sep = " ", remove = TRUE, extra = "merge") %>%
   separate(P_DENSE, into = c(NA, "P_DENSE2"), sep = " ", remove = TRUE, extra = "merge") %>%
   separate(ECON6A, into = c(NA, "ECON6A_2"), sep = " ", remove = TRUE, extra = "merge") %>%
   separate(ECON6C, into = c(NA, "ECON6C_2"), sep = " ", remove = TRUE, extra = "merge") %>%
   separate(ECON5A_B, into = c(NA, "ECON5A_B2"), sep = " ", remove = TRUE, extra = "merge") %>%
-  filter(GENDER2 != "SKIPPED ON WEB",
+  filter(AGE7 != "(88) Removed for disclosure risk",
+         GENDER2 != "SKIPPED ON WEB",
          RACETH2 != "REFUSED", RACETH2 != "Removed for disclosure risk", 
          RACETH2 != "SKIPPED ON WEB",
          ECON6A_2 != "SKIPPED ON WEB", ECON6A_2 != "REFUSED", ECON6A_2 != "DON'T KNOW",
          ECON6C_2 != "SKIPPED ON WEB", ECON6C_2 != "REFUSED", ECON6C_2 != "DON'T KNOW",
          ECON5A_B2 != "SKIPPED ON WEB", ECON5A_B2 != "REFUSED", ECON5A_B2 != "DON'T KNOW") %>%
+  mutate(AGE7 = case_when(
+    AGE7 == "(1) 18-24" ~ "1",
+    AGE7 == "(2) 25-34" ~ "2",
+    AGE7 == "(3) 35-44" ~ "3",
+    AGE7 == "(4) 45-54" ~ "4",
+    AGE7 == "(5) 55-64" ~ "5",
+    AGE7 == "(6) 65-74" ~ "6",
+    AGE7 == "(7) 75+" ~ "7",
+    AGE7 == "(99) Under 18" ~ "8",
+    TRUE ~ AGE7
+  )) %>%
   mutate(ECON6A_2 = case_when(
     ECON6A_2 == "Did not receive nor apply for any" ~ "Did not apply",
     ECON6A_2 == "Applied for" ~ "Applied",
@@ -168,7 +180,8 @@ other_vars_data <- data_vars2 %>%
     ECON6C_2 == "Did not receive nor apply for any" ~ "Did not apply",
     ECON6C_2 == "Applied for" ~ "Applied",
     ECON6C_2 == "Tried to apply for" ~ "Tried to apply",
-    TRUE ~ ECON6C_2))
+    TRUE ~ ECON6C_2)) %>% 
+  mutate(AGE7 = as.numeric(AGE7))
 
 # re-format cost question
 cost_question <- data_vars2 %>%
