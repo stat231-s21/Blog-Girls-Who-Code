@@ -137,21 +137,36 @@ post_cluster_vars <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/pos
 alL_vars_data <- post_cluster_vars %>% 
   left_join(kmeans_data2, by = "AGE7") 
 
+ggplot(alL_vars_data, aes(x = HHINCOME, group = clust4, fill = clust4)) +
+    geom_density(adjust=3) + 
+  labs(title = "Distribution of Income By Cluster", 
+       x = "Income", 
+       fill = "Cluster Assignment")
+
+ggplot(alL_vars_data, aes(x = AGE7, group = clust4, fill = clust4)) +
+    geom_density(adjust=3) +
+  labs(title = "Distribution of Age By Cluster", 
+       x = "Age Group", 
+       fill = "Cluster Assignment")
+```
+
+
+```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = GENDER2)) +
-  geom_histogram(stat = "count") +
-  labs(title = "Distribution of Cluster Assignment by Gender", 
+  geom_bar(position = "fill") +
+  labs(title = "Gender Proportions by Cluster Assignment", 
        x = "Cluster Assignment", 
        fill = "Gender") 
 
 ggplot(alL_vars_data, aes(x = clust4, fill = RACETH2)) +
-  geom_histogram(stat = "count") +
-  labs(title = "Distribution of Cluster Assignment by Race", 
+  geom_bar(position = "fill") +
+  labs(title = "Race Proportions by Cluster Assignment", 
        x = "Cluster Assignment", 
        fill = "Race")
 
 ggplot(alL_vars_data, aes(x = clust4, fill = P_DENSE2)) +
-  geom_histogram(stat = "count") +
-  labs(title = "Distribution of Cluster Assignment by Population Density", 
+  geom_bar(position = "fill") +
+  labs(title = "Population Density Proportions by Cluster Assignment", 
        x = "Cluster Assignment", 
        fill = "Population Density")
 ```
@@ -159,20 +174,20 @@ Next, we create visualizations to explore the relationship between cluster assig
 
 ```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = ECON6A_2)) +
-  geom_histogram(stat = "count") +
-  labs(title = "Distribution of Cluster Assignment by Unemployment Insurance Status", 
+  geom_bar(position = "fill") +
+  labs(title = "Proportions of Unemployment Insurance Status Cluster Assignment", 
        x = "Cluster Assignment", 
        fill = "Unemployment Insurance Status")
 
 ggplot(alL_vars_data, aes(x = clust4, fill = ECON6C_2)) +
-  geom_histogram(stat = "count") +
-  labs(title = "Distribution of Cluster Assignment by TANF Status", 
+  geom_bar(position = "fill") +
+  labs(title = "Proportions of TANF Status Cluster Assignment", 
        x = "Cluster Assignment", 
        fill = "TANF Status")
 
 ggplot(alL_vars_data, aes(x = clust4, fill = ECON5A_B2)) +
-  geom_histogram(stat = "count") +
-  labs(title = "Distribution of Cluster Assignment by Level of Food Security", 
+  geom_bar(position = "fill") +
+  labs(title = "Proportions of Food Security Levels Status Cluster Assignment", 
        x = "Cluster Assignment", 
        fill = "Level of Food Security")
 ```
