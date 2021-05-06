@@ -132,15 +132,47 @@ The economic health variables of interest are:
 First, we create visualizations to explore the relationship between cluster assignment and our demographic variables of interest. 
 
 ```{r}
-post_cluster_data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/post_cluster_data.csv") %>% 
-  mutate(clust4 = as.character(km4_out$cluster))
+post_cluster_vars <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/post_cluster_data.csv")
+  
+alL_vars_data <- post_cluster_vars %>% 
+  left_join(kmeans_data2, by = "AGE7") 
 
-ggplot(post_cluster_data, aes(x = clust4, fill = GENDER2)) +
-  geom_histogram(stat = "count")
+ggplot(alL_vars_data, aes(x = clust4, fill = GENDER2)) +
+  geom_histogram(stat = "count") +
+  labs(title = "Distribution of Cluster Assignment by Gender", 
+       x = "Cluster Assignment", 
+       fill = "Gender") 
 
-ggplot(post_cluster_data, aes(x = clust4, fill = RACETH2)) +
-  geom_histogram(stat = "count")
+ggplot(alL_vars_data, aes(x = clust4, fill = RACETH2)) +
+  geom_histogram(stat = "count") +
+  labs(title = "Distribution of Cluster Assignment by Race", 
+       x = "Cluster Assignment", 
+       fill = "Race")
 
+ggplot(alL_vars_data, aes(x = clust4, fill = P_DENSE2)) +
+  geom_histogram(stat = "count") +
+  labs(title = "Distribution of Cluster Assignment by Population Density", 
+       x = "Cluster Assignment", 
+       fill = "Population Density")
 ```
+Next, we create visualizations to explore the relationship between cluster assignment and our economic health variables of interest. 
 
+```{r}
+ggplot(alL_vars_data, aes(x = clust4, fill = ECON6A_2)) +
+  geom_histogram(stat = "count") +
+  labs(title = "Distribution of Cluster Assignment by Unemployment Insurance Status", 
+       x = "Cluster Assignment", 
+       fill = "Unemployment Insurance Status")
 
+ggplot(alL_vars_data, aes(x = clust4, fill = ECON6C_2)) +
+  geom_histogram(stat = "count") +
+  labs(title = "Distribution of Cluster Assignment by TANF Status", 
+       x = "Cluster Assignment", 
+       fill = "TANF Status")
+
+ggplot(alL_vars_data, aes(x = clust4, fill = ECON5A_B2)) +
+  geom_histogram(stat = "count") +
+  labs(title = "Distribution of Cluster Assignment by Level of Food Security", 
+       x = "Cluster Assignment", 
+       fill = "Level of Food Security")
+```
