@@ -37,7 +37,7 @@ Our clustering analysis includes the following variables:
 * ECON4B - Think about 3 months from now, how likely do you think it is that you will be employed at that time?
 
 ```{r}
-kmeans_data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/kmeans_data.csv") 
+kmeans_data <- read.csv("~/git/Blog-Girls-Who-Code/kmeans_data.csv") 
 
 set.seed(23)
 km2_out <- kmeans(kmeans_data, centers = 2, nstart = 20)
@@ -132,7 +132,7 @@ The economic health variables of interest are:
 First, we create visualizations to explore the relationship between cluster assignment and our demographic variables of interest. 
 
 ```{r}
-post_cluster_vars <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/post_cluster_data.csv")
+post_cluster_vars <- read.csv("~/git/Blog-Girls-Who-Code/post_cluster_data.csv")
   
 alL_vars_data <- post_cluster_vars %>% 
   left_join(kmeans_data2, by = "AGE7") 
@@ -191,3 +191,15 @@ ggplot(alL_vars_data, aes(x = clust4, fill = ECON5A_B2)) +
        x = "Cluster Assignment", 
        fill = "Level of Food Security")
 ```
+
+```{r}
+
+ggplot(data = alL_vars_data, aes(x=ECON4A, group = clust4, fill=clust4)) +
+  geom_density(adjust = 5) +
+  facet_wrap(~clust4)
+
+ggplot(data = alL_vars_data, aes(x=ECON4B, group = clust4, fill=clust4)) +
+  geom_density(adjust = 5) +
+  facet_wrap(~clust4)
+```
+
