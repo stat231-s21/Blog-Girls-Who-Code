@@ -132,7 +132,7 @@ The economic health variables of interest are:
 First, we create visualizations to explore the relationship between cluster assignment and our demographic variables of interest. 
 
 ```{r}
-post_cluster_vars <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/kmeans_data.csv")
+post_cluster_vars <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/post_cluster_data.csv")
   
 alL_vars_data <- post_cluster_vars %>% 
   left_join(kmeans_data2, by = "AGE7") 
