@@ -48,7 +48,7 @@ Loading the COVID Impact Data:
 ```{r}
 library(tidyverse)
 
-data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/COVID_W3_delivered.csv")
+data <- read.csv("~/git/Blog-Girls-Who-Code/COVID_W3_delivered.csv")
 
 data_vars <- data %>%
   select(ECON4A, ECON4B, HHINCOME, EDUCATION, AGE7)

@@ -1,0 +1,81 @@
+---
+title: "Clustering2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+library(ggrepel)
+library(GGally)
+library(ggmosaic)
+```
+
+
+
+```{r}
+kmeansdata <- read.csv("~/git/Blog-Girls-Who-Code/kmeans_data.csv")
+
+kmeansdata <- kmeansdata %>%
+  select(HHINCOME, EDUCATION)
+```
+
+```{r}
+set.seed(23)
+km2_out <- kmeans(kmeansdata, centers = 2, nstart = 20)
+km2_out$centers
+
+kmeansdata2 <- kmeansdata %>%
+  mutate(clust2 = as.character(km2_out$cluster))
+
+set.seed(23)
+km4_out <- kmeans(kmeansdata, centers = 4, nstart = 20)
+km4_out$centers
+
+kmeansdata2 <- kmeansdata2 %>%
+  mutate(clust4 = as.character(km4_out$cluster))
+
+set.seed(23)
+km5_out <- kmeans(kmeansdata, centers = 5, nstart = 20)
+km5_out$centers
+
+kmeansdata2 <- kmeansdata2 %>%
+  mutate(clust5 = as.character(km5_out$cluster))
+
+set.seed(23)
+km7_out <- kmeans(kmeansdata, centers = 7, nstart = 20)
+km7_out$centers
+
+kmeansdata2 <- kmeansdata2 %>%
+  mutate(clust7 = as.character(km7_out$cluster))
+
+set.seed(23)
+km11_out <- kmeans(kmeansdata, centers = 11, nstart = 20)
+km11_out$centers
+
+kmeans_data2 <- kmeansdata2 %>%
+  mutate(clust11 = as.character(km11_out$cluster))
+```
+
+```{r}
+ig <- matrix(NA, nrow=15, ncol=2)
+
+set.seed(75)
+for (i in 1:15){
+  fig[i,1] <- i
+  fig[i,2] <- kmeans(kmeansdata
+                    , centers=i
+                    , nstart=20)$tot.withinss
+}
+
+ggplot(data = as.data.frame(fig), aes(x = V1, y = V2)) +
+  geom_point() + 
+  geom_line() +
+  scale_x_continuous(breaks=c(1:15)) +
+  labs(x = "K", y = expression("Total W"[k]))
+```
+
