@@ -141,13 +141,15 @@ ggplot(alL_vars_data, aes(x = HHINCOME, group = clust4, fill = clust4)) +
     geom_density(adjust=3) + 
   labs(title = "Distribution of Income By Cluster", 
        x = "Income", 
-       fill = "Cluster Assignment")
+       fill = "Cluster Assignment") + 
+  facet_wrap(~clust4)
 
 ggplot(alL_vars_data, aes(x = AGE7, group = clust4, fill = clust4)) +
     geom_density(adjust=3) +
   labs(title = "Distribution of Age By Cluster", 
        x = "Age Group", 
-       fill = "Cluster Assignment")
+       fill = "Cluster Assignment") +
+  facet_wrap(~clust4)
 ```
 
 
