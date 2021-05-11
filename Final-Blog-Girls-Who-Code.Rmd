@@ -1,0 +1,29 @@
+---
+title: "PUG Blog Project: COVID-19 Impact on Individual Economic Health"
+authors: Maggie Smith & Sammy Phillips
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(ggrepel)
+library(GGally)
+library(ggmosaic)
+```
+
+# Introduction
+
+# Clustering Analysis
+
+# Post-Clustering Analysis
+
+# Limitations & Extensions 
+
+# Conclusion
