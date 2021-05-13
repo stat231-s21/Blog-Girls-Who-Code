@@ -170,13 +170,13 @@ In the density plot comparing cluster assignment and both of the employment like
 
 # Post-Clustering Analysis
 
-After performing our clustering analysis, we explored the relationship between different demographic and economic health variables and cluster assignment. First, we examined the proportions of categorical demographic variable responses across clusters. The following demographic variables were used in this investigation:
+After performing our clustering analysis, we explored the relationship between different demographic and economic health variables and cluster assignment. The goal of this post-clustering analysis was to determine if cluster assignment could predict responses to a number of different demographic and economic health questions included in the COVID-Impact survey. First, we examined the proportions of categorical demographic variable responses across clusters. The following demographic variables were used in this investigation:
 
 * Gender: Male or Female
 * Racial Background: Black (non-Hispanic), Hispanic, Other (non-Hispanic), White (non-Hispanic)
 * Population Density: Rural, Suburban, Urban
 
-Shown in the plots below, the proportions of both gender and population density responses did not differ substantially across clusters. In other words, all four clusters were made up of a similar proportion of male and female respondents; approximately 40% of respondents were male and approximately 60% of respondents were female across all clusters. Additionally, all four clusters were made up of a similar proportion of respondents from rural, suburban, and urban environments; approximately 75% of respondents lived in an urban environment, approximately 20% of respondents lived in a suburban environment, and approximately 5% of respondents lived in a rural environment across all clusters. Therefore, these visualizations demonstrate that cluster assignment does not predict variation in gender and population density of respondents.
+Shown in the plots below, the proportions of both gender and population density responses did not differ substantially across clusters. In other words, all four clusters were made up of a similar proportion of male and female respondents; approximately 40% of respondents were male and approximately 60% of respondents were female across all clusters. Additionally, all four clusters were made up of a similar proportion of respondents from rural, suburban, and urban environments; approximately 75% of respondents lived in an urban environment, approximately 20% of respondents lived in a suburban environment, and approximately 5% of respondents lived in a rural environment across all clusters. Therefore, these visualizations demonstrate that cluster assignment does not predict responses to gender and population density questions well.
 
 ```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = GENDER2)) +
@@ -194,7 +194,7 @@ ggplot(alL_vars_data, aes(x = clust4, fill = P_DENSE2)) +
        fill = "Population Density")
 ```
 
-Unlike the plots above, the plot below shows how the proportions of reported racial background differed across clusters. For instance, the red, green and blue bars are similar and thicker in clusters one and three than in clusters two and four. These findings suggest that respondents from clusters one and three reported a Black-non-Hispanic background, a Hispanic background, or another non-Hispanic background at a higher rate than participants in clusters two and four. Additionally, the purple bars are similar and thicker in clusters two and four than in clusters one and three. This result implies that respondents in clusters two and four reported a White, non-Hispanic background at a higher rate than respondents in clusters one and three. As different patterns in the proportions of reported racial background emerged, this visualization demonstrates that cluster assignment can predict interesting differences in reported racial background. It also shows that respondents from clusters one and three report similar racial background proportions and that respondents from clusters two and four report similar racial background proportions.
+Unlike the plots above, the plot below shows how the proportions of reported racial background differed across clusters. For instance, the red, green and blue bars are similar and thicker in clusters one and three than in clusters two and four. These findings suggest that respondents from clusters one and three reported a Black-non-Hispanic background, a Hispanic background, or another non-Hispanic background at a higher rate than participants in clusters two and four. Additionally, the purple bars are similar and thicker in clusters two and four than in clusters one and three. This result implies that respondents in clusters two and four reported a White, non-Hispanic background at a higher rate than respondents in clusters one and three. As different patterns in the proportions of reported racial background emerged, this visualization demonstrates that cluster assignment can predict differences in reported racial background. It also shows that respondents from clusters one and three reported similar racial backgrounds and that respondents from clusters two and four reported similar racial backgrounds.
 
 ```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = RACETH2)) +
@@ -214,7 +214,7 @@ After exploring the relationship between our categorical demographic variables a
 * Food Security
   - Please indicate whether the following statement was often true, sometimes true, or never true for you or your household over the past 30 days: “The food that we bought just didn't last, and we didn't have money to get more.”
   
-The plot below shows that the proportion of responses to the TANF status question did not differ greatly across clusters. The blue and the purple bars are slightly greater in clusters one and three, indicating that respondents in these clusters were slightly more likely to have tried to apply for TANF or to have received TANF. However, as over 95% of participants reported that they did not apply for TANF across all four clusters, cluster assignment does not predict interesting variation in TANF status.
+The plot below shows that the proportion of responses to the TANF status question did not differ greatly across clusters. The blue and the purple bars are slightly greater in clusters one and three, indicating that respondents in these clusters were slightly more likely to have tried to apply for TANF or to have received TANF. However, as over 95% of participants reported that they did not apply for TANF across all four clusters, cluster assignment does not predict very interesting or relevant variation in responses to the TANF status question.
 
 ```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = ECON6C_2)) +
@@ -225,7 +225,7 @@ ggplot(alL_vars_data, aes(x = clust4, fill = ECON6C_2)) +
        fill = "TANF Status")
 ```
 
-The next visualization, presented below, demonstrates how the proportion of responses to the unemployment insurance questions change across clusters. The blue bars are larger in clusters one and three than in clusters two and four. This finding indicates that clusters one and three received unemployment insurance at a higher rate than respondents in clusters two and four. The purple bar is also largest in cluster three, indicating that respondents in cluster three tried to apply for unemployment insurance at a higher rate than respondents in the other clusters. However, as approximately 90% of respondents in each cluster did not apply for unemployment insurance, cluster assignment does not predict very interesting patterns of unemployment insurance status.
+The next visualization, presented below, demonstrates how the proportion of responses to the unemployment insurance questions change across clusters. The blue bars are larger in clusters one and three than in clusters two and four. This finding indicates that clusters one and three received unemployment insurance at a higher rate than respondents in clusters two and four. The purple bar is also largest in cluster three, indicating that respondents in cluster three tried to apply for unemployment insurance at a higher rate than respondents in the other clusters. However, as approximately 90% of respondents in each cluster did not apply for unemployment insurance, cluster assignment does not predict very interesting or relevant patterns of responses to the unemployment insurance status question.
 
 ```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = ECON6A_2)) +
@@ -237,7 +237,7 @@ ggplot(alL_vars_data, aes(x = clust4, fill = ECON6A_2)) +
        fill = "Unemployment Insurance Status")
 ```
 
-Our final visualization illustrates the relationship between cluster assignment and the proportions of reported levels of food security. As can be seen below, the blue and green bars are thicker in clusters one and three and the red bars are thicker in clusters two and four. This variance in proportion of reported food security levels suggests that respondents in clusters one and three ran out of food due to financial problems at a higher rate than participants in clusters two and four. Therefore, cluster assignment is able to predict interesting differences in proportions of reported levels of food security.
+Our final visualization illustrates the relationship between cluster assignment and the proportions of reported levels of food security. As can be seen below, the blue and green bars are thicker in clusters one and three and the red bars are thicker in clusters two and four. This variance in proportion of reported food security levels suggests that respondents in clusters one and three ran out of food due to financial problems at a higher rate than participants in clusters two and four. Therefore, cluster assignment is able to predict interesting differences in the responses to the question about food security.
 
 ```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = ECON5A_B2)) +
@@ -258,7 +258,7 @@ To expand upon this research in the future, we have several suggestions. First, 
 
 # Conclusion
 
-In conclusion, both our clustering analysis and our post-clustering analysis provide interesting insights about the impact of COVID-19 on individual economic health. Through our clustering analysis, we discovered that groups of individuals were similar in their responses to questions concerning future employment confidence, age group and income bracket. With our post-clustering analysis, we learned that cluster assignment predicted interesting levels of variance in racial background and level of food security among groups of respondents. As economic recovery policies are being created and implemented, it is important that researchers continue to strive to fully understand the impact of COVID-19. This understanding will inform the development and implementation of stimulus packages which will help those who have dealt with and are still dealing with the most extreme impacts of the pandemic.
+In conclusion, both our clustering analysis and our post-clustering analysis provide interesting insights about the impact of COVID-19 on individual economic health. Through our clustering analysis, we discovered that groups of individuals were similar in their responses to questions concerning future employment confidence, age group and income bracket. With our post-clustering analysis, we learned that cluster assignment predicted interesting differences in responses to questions concerning racial background and level of food security. As economic recovery policies are being created and implemented, it is important that researchers continue to strive to fully understand the impact of COVID-19 on individual economic health. This understanding will inform the development and implementation of stimulus packages which will help those who have dealt with and are still dealing with the most extreme impacts of the pandemic.
 
 # Bibliography
 
