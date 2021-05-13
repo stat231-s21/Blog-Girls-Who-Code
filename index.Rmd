@@ -42,7 +42,7 @@ One of the first steps we took was determining which variables would be best to 
 Next, we created an elbow plot to compare the number of clusters with inter-cluster variation. We were looking for an “elbow” in the graph’s line where there would be a sharp decrease in the change in inter-cluster variation as the number of clusters increases. The point where this elbow occurs signals the optimal number of clusters for the data.
 
 ```{r}
-kmeans_data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/kmeans_data.csv") 
+kmeans_data <- read.csv("~/git/Blog-Girls-Who-Code/kmeans_data.csv") 
 
 # Creating elbow plot
 
@@ -122,7 +122,7 @@ While the original pairs diagram didn’t contain a lot of helpful information a
 ```{r}
 # Adding cluster assignments to dataset with all variables of interest (relevant later)
 
-post_cluster_vars <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/post_cluster_data.csv")
+post_cluster_vars <- read.csv("~/git/Blog-Girls-Who-Code/post_cluster_data.csv")
   
 alL_vars_data <- post_cluster_vars %>% 
   left_join(kmeans_data2, by = "AGE7") 
@@ -157,16 +157,16 @@ With the age distribution, the similar cluster pairs change. Clusters one and th
 ```{r}
 ggplot(data = alL_vars_data, aes(x=ECON4A, group = clust4, fill=clust4)) +
   geom_density(adjust = 5) +
-  labs(title = "Distribution of ECON4A Answers by Cluster", 
-       x = "ECON4A Answers", 
+  labs(title = "Distribution of 30-day Employment Confidence by Cluster", 
+       x = "30-day employment confidence", 
        y = "Density",
        fill = "Cluster Assignment") +
   facet_wrap(~clust4)
 
 ggplot(data = alL_vars_data, aes(x=ECON4B, group = clust4, fill=clust4)) +
   geom_density(adjust = 5) +
-  labs(title = "Distribution of ECON4B Answers by Cluster", 
-       x = "ECON4B Answers", 
+  labs(title = "Distribution of Three-Month Employment Confidence Answers by Cluster", 
+       x = "Three month employment confidence", 
        y = "Density",
        fill = "Cluster Assignment") +
   facet_wrap(~clust4)
