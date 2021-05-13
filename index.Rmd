@@ -22,13 +22,13 @@ While COVID has affected almost everyone in the US and around the world, it is c
 
 ![CDC Illustration of the COVID-19 Virus](Coronavirus-CDC-1600x900.jpg)
 
-# Project overview
+# Project Overview
 
 This project uses the same COVID Impact Survey data as our [Shiny app](https://maggie-smth.shinyapps.io/COVID-proj/), which we chose for the ability to explore relationships between different variables in a deeper and more meaningful way. The survey was administered by the Data Foundation, a non-governmental organization, and focuses on physical health, economic and food security, and unemployment. This survey included 2,047 adults was conducted from May 30th to June 8th using a sample drawn from NORC’s probability-based AmeriSpeak Panel, which is designed to be representative of the U.S. population. The data, and more information about the COVID Impact Survey, is available [here](https://www.covid-impact.org). 
 
 In order to expand on our Shiny app analysis, we wanted to explore more holistic relationships in the data by making complex comparisons between multiple variables at once. We used k-means clustering to form groupings in the data based on similarities in a few variables, and then continued our analysis by determining whether these clusters could predict the values of other variables. Because the clusters were designed to group respondents by the degree to which they’d felt particular impacts of the pandemic, we compared them to both demographic variables as well as other economic health variables. This allowed us to further explore which variables in the dataset best predict impacts of COVID-19 on individual economic health.
 
-# Clustering analysis
+# Clustering Analysis
 
 One of the first steps we took was determining which variables would be best to use in the formation of the clusters. We had two primary requirements in mind: (a) variables have to be numeric and ordinal, and (b) variables should have enough variation to form clusters that are sufficiently different from each other. Because our data was based on a survey, almost all the variables were categorical. We chose variables that could be coerced into a numeric format, either because the question required the respondent to rate themselves on a scale or because the question had a set of other ordered, categorical answers. The variables we ended up including in the clustering were:
 
@@ -247,22 +247,14 @@ In conclusion, both our clustering analysis and our post-clustering analysis pro
 
 Data: 
 
-Anand Parekh, Nancy Potok, Charlie Rothwell and Elena Manresa (2021). COVID Impact     Survey. https://www.covid-impact.org
+1. Anand Parekh, Nancy Potok, Charlie Rothwell and Elena Manresa (2021). COVID Impact Survey. https://www.covid-impact.org
 
 Packages: 
 
-Barret Schloerke, Di Cook, Joseph Larmarange, Francois Briatte,
-  Moritz Marbach, Edwin Thoen, Amos Elberg and Jason Crowley (2021).
-  GGally: Extension to 'ggplot2'. R package version 2.1.1.
-  https://CRAN.R-project.org/package=GGally
+1. Barret Schloerke, Di Cook, Joseph Larmarange, Francois Briatte, Moritz Marbach, Edwin Thoen, Amos Elberg and Jason Crowley (2021). GGally: Extension to 'ggplot2'. R package version 2.1.1. https://CRAN.R-project.org/package=GGally
   
-Haley Jeppson, Heike Hofmann and Di Cook (2021). ggmosaic: Mosaic
-  Plots in the 'ggplot2' Framework. R package version 0.3.3.
-  https://CRAN.R-project.org/package=ggmosaic
+2. Haley Jeppson, Heike Hofmann and Di Cook (2021). ggmosaic: Mosaic Plots in the 'ggplot2' Framework. R package version 0.3.3. https://CRAN.R-project.org/package=ggmosaic
 
-Kamil Slowikowski (2021). ggrepel: Automatically Position
-  Non-Overlapping Text Labels with 'ggplot2'. R package version
-  0.9.1. https://CRAN.R-project.org/package=ggrepel
+3. Kamil Slowikowski (2021). ggrepel: Automatically Position Non-Overlapping Text Labels with 'ggplot2'. R package version 0.9.1. https://CRAN.R-project.org/package=ggrepel 
   
-Wickham et al., (2019). Welcome to the tidyverse. Journal of Open
-  Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
+4. Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686

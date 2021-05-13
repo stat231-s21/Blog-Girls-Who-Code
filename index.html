@@ -126,8 +126,8 @@
     <div id="toc">
       <ul>
       <li><a href="#introduction">Introduction</a></li>
-      <li><a href="#project-overview">Project overview</a></li>
-      <li><a href="#clustering-analysis">Clustering analysis</a></li>
+      <li><a href="#project-overview">Project Overview</a></li>
+      <li><a href="#clustering-analysis">Clustering Analysis</a></li>
       <li><a href="#post-clustering-analysis">Post-Clustering Analysis</a></li>
       <li><a href="#limitations-extensions">Limitations &amp; Extensions</a></li>
       <li><a href="#conclusion">Conclusion</a></li>
@@ -155,12 +155,12 @@
 </div>
 </div>
 <div id="project-overview" class="section level1">
-<h1>Project overview</h1>
+<h1>Project Overview</h1>
 <p>This project uses the same COVID Impact Survey data as our <a href="https://maggie-smth.shinyapps.io/COVID-proj/">Shiny app</a>, which we chose for the ability to explore relationships between different variables in a deeper and more meaningful way. The survey was administered by the Data Foundation, a non-governmental organization, and focuses on physical health, economic and food security, and unemployment. This survey included 2,047 adults was conducted from May 30th to June 8th using a sample drawn from NORC’s probability-based AmeriSpeak Panel, which is designed to be representative of the U.S. population. The data, and more information about the COVID Impact Survey, is available <a href="https://www.covid-impact.org">here</a>.</p>
 <p>In order to expand on our Shiny app analysis, we wanted to explore more holistic relationships in the data by making complex comparisons between multiple variables at once. We used k-means clustering to form groupings in the data based on similarities in a few variables, and then continued our analysis by determining whether these clusters could predict the values of other variables. Because the clusters were designed to group respondents by the degree to which they’d felt particular impacts of the pandemic, we compared them to both demographic variables as well as other economic health variables. This allowed us to further explore which variables in the dataset best predict impacts of COVID-19 on individual economic health.</p>
 </div>
 <div id="clustering-analysis" class="section level1">
-<h1>Clustering analysis</h1>
+<h1>Clustering Analysis</h1>
 <p>One of the first steps we took was determining which variables would be best to use in the formation of the clusters. We had two primary requirements in mind: (a) variables have to be numeric and ordinal, and (b) variables should have enough variation to form clusters that are sufficiently different from each other. Because our data was based on a survey, almost all the variables were categorical. We chose variables that could be coerced into a numeric format, either because the question required the respondent to rate themselves on a scale or because the question had a set of other ordered, categorical answers. The variables we ended up including in the clustering were:</p>
 <ul>
 <li>Age (which has seven answers each of which included a range)</li>
@@ -384,12 +384,16 @@ ggplot(alL_vars_data, aes(x = HHINCOME, group = clust4, fill = clust4)) +
 <div id="bibliography" class="section level1">
 <h1>Bibliography</h1>
 <p>Data:</p>
-<p>Anand Parekh, Nancy Potok, Charlie Rothwell and Elena Manresa (2021). COVID Impact Survey. <a href="https://www.covid-impact.org" class="uri">https://www.covid-impact.org</a></p>
+<ol style="list-style-type: decimal">
+<li>Anand Parekh, Nancy Potok, Charlie Rothwell and Elena Manresa (2021). COVID Impact Survey. <a href="https://www.covid-impact.org" class="uri">https://www.covid-impact.org</a></li>
+</ol>
 <p>Packages:</p>
-<p>Barret Schloerke, Di Cook, Joseph Larmarange, Francois Briatte, Moritz Marbach, Edwin Thoen, Amos Elberg and Jason Crowley (2021). GGally: Extension to ‘ggplot2’. R package version 2.1.1. <a href="https://CRAN.R-project.org/package=GGally" class="uri">https://CRAN.R-project.org/package=GGally</a></p>
-<p>Haley Jeppson, Heike Hofmann and Di Cook (2021). ggmosaic: Mosaic Plots in the ‘ggplot2’ Framework. R package version 0.3.3. <a href="https://CRAN.R-project.org/package=ggmosaic" class="uri">https://CRAN.R-project.org/package=ggmosaic</a></p>
-<p>Kamil Slowikowski (2021). ggrepel: Automatically Position Non-Overlapping Text Labels with ‘ggplot2’. R package version 0.9.1. <a href="https://CRAN.R-project.org/package=ggrepel" class="uri">https://CRAN.R-project.org/package=ggrepel</a></p>
-<p>Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, <a href="https://doi.org/10.21105/joss.01686" class="uri">https://doi.org/10.21105/joss.01686</a></p>
+<ol style="list-style-type: decimal">
+<li><p>Barret Schloerke, Di Cook, Joseph Larmarange, Francois Briatte, Moritz Marbach, Edwin Thoen, Amos Elberg and Jason Crowley (2021). GGally: Extension to ‘ggplot2’. R package version 2.1.1. <a href="https://CRAN.R-project.org/package=GGally" class="uri">https://CRAN.R-project.org/package=GGally</a></p></li>
+<li><p>Haley Jeppson, Heike Hofmann and Di Cook (2021). ggmosaic: Mosaic Plots in the ‘ggplot2’ Framework. R package version 0.3.3. <a href="https://CRAN.R-project.org/package=ggmosaic" class="uri">https://CRAN.R-project.org/package=ggmosaic</a></p></li>
+<li><p>Kamil Slowikowski (2021). ggrepel: Automatically Position Non-Overlapping Text Labels with ‘ggplot2’. R package version 0.9.1. <a href="https://CRAN.R-project.org/package=ggrepel" class="uri">https://CRAN.R-project.org/package=ggrepel</a></p></li>
+<li><p>Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, <a href="https://doi.org/10.21105/joss.01686" class="uri">https://doi.org/10.21105/joss.01686</a></p></li>
+</ol>
 </div>
 </div>
 
