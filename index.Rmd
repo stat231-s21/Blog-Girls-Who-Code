@@ -231,6 +231,26 @@ ggplot(alL_vars_data, aes(x = clust4, fill = ECON6C_2)) +
        fill = "TANF Status")
 ```
 
+A majority of respondents reported that they did not apply for TANF across all four clusters. As a result, it is hard to visualize the proportions of respondents who may have applied for, tried to apply for, or received TANF. For this reason, instead of creating a plot, we created the table below to analyze differences in proportions of responses to the TANF question.
+
+```{r, echo=FALSE}
+TANF_data <- alL_vars_data %>% 
+  filter(ECON6C_2 != "Did not apply") %>% 
+  select(clust4, ECON6C_2) %>% 
+  group_by(clust4) %>% 
+  summarise(did_not_apply = prop.table("Did not apply", margin = ECON6C_2))
+```
+
+```{r, results='asis'}
+knitr::kable(TANF_data, "latex", booktabs = TRUE, escape = FALSE, 
+             col.names = 
+               c("Cluster Assignmnet", "Class Code", "Class Type", "Hours Spent on HW", 
+                 "Hours Spent in Class", "Total Hours"))%>% 
+  kableExtra::kable_styling(position = "center", row_label_position = "c", 
+                            latex_options = "hold_position")
+```
+
+
 The next visualization, presented below, demonstrates how the proportion of responses to the unemployment insurance questions change across clusters. The blue bars are larger in clusters one and three than in clusters two and four. This finding indicates that clusters one and three received unemployment insurance at a higher rate than respondents in clusters two and four. The purple bar is also largest in cluster three, indicating that respondents in cluster three tried to apply for unemployment insurance at a higher rate than respondents in the other clusters. However, as approximately 90% of respondents in each cluster did not apply for unemployment insurance, cluster assignment does not predict very interesting or relevant patterns of responses to the unemployment insurance status question.
 
 ```{r}
@@ -241,6 +261,8 @@ ggplot(alL_vars_data, aes(x = clust4, fill = ECON6A_2)) +
        x = "Cluster Assignment", 
        y = "Proportion",
        fill = "Unemployment Insurance Status")
+
+
 ```
 
 Our final visualization illustrates the relationship between cluster assignment and the proportions of reported levels of food security. As can be seen below, the blue and green bars are thicker in clusters one and three and the red bars are thicker in clusters two and four. This variance in proportion of reported food security levels suggests that respondents in clusters one and three ran out of food due to financial problems at a higher rate than participants in clusters two and four. Therefore, cluster assignment is able to predict interesting differences in the responses to the question about food security.
