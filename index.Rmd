@@ -44,6 +44,24 @@ Next, we created an elbow plot to compare the number of clusters with inter-clus
 ```{r}
 kmeans_data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/kmeans_data.csv") 
 
+# Creating elbow plot
+
+fig <- matrix(NA, nrow=15, ncol=2)
+
+set.seed(75)
+for (i in 1:15){
+  fig[i,1] <- i
+  fig[i,2] <- kmeans(kmeans_data
+                    , centers=i
+                    , nstart=20)$tot.withinss
+}
+
+ggplot(data = as.data.frame(fig), aes(x = V1, y = V2)) +
+  geom_point() + 
+  geom_line() +
+  scale_x_continuous(breaks=c(1:15)) +
+  labs(x = "K", y = expression("Total W"[k]))
+
 # Performing kmeans clustering analysis with various numbers of centroids
 
 set.seed(23)
@@ -81,24 +99,6 @@ km11_out$centers
 kmeans_data2 <- kmeans_data2 %>%
   mutate(clust11 = as.character(km11_out$cluster))
 
-# Creating elbow plot
-
-fig <- matrix(NA, nrow=15, ncol=2)
-
-set.seed(75)
-for (i in 1:15){
-  fig[i,1] <- i
-  fig[i,2] <- kmeans(kmeans_data
-                    , centers=i
-                    , nstart=20)$tot.withinss
-}
-
-ggplot(data = as.data.frame(fig), aes(x = V1, y = V2)) +
-  geom_point() + 
-  geom_line() +
-  scale_x_continuous(breaks=c(1:15)) +
-  labs(x = "K", y = expression("Total W"[k]))
-
 ```
 
 As we can see, there’s not a clear elbow in the plot for our data. While the decrease in inter-cluster variation definitely isn’t constant, the change decreases fairly steadily. We decided to perform the rest of our analysis using four clusters because the change in inter-cluster variation seems to decrease more noticeably after that point and the centroids of the clusters are more varied than the centroids of larger numbers of clusters.
@@ -119,10 +119,6 @@ ggpairs(data = kmeans_data2
 
 While the original pairs diagram didn’t contain a lot of helpful information about the clusters, it was clear that income and age were driving variables in the cluster assignment (because the variation between clusters was most clear in the density plots for those variables). In order to explore clustering with these two variables more in-depth, we re-created the density plots while faceting by cluster assignment. 
 
-As we can see, clusters one and four are fairly similar, they both contain respondents that have higher incomes. Clusters two and three contain respondents with lower incomes, with cluster three containing a wider variation.
-
-With the age distribution, the similar cluster pairs change. Clusters one and three seem to be closely related, with cluster three containing a slightly higher number of young respondents. On the other hand, clusters two and four contain older respondents.
-
 ```{r}
 # Adding cluster assignments to dataset with all variables of interest (relevant later)
 
@@ -140,7 +136,12 @@ ggplot(alL_vars_data, aes(x = HHINCOME, group = clust4, fill = clust4)) +
        y = "Density",
        fill = "Cluster Assignment") + 
   facet_wrap(~clust4)
+```
 
+
+As we can see, clusters one and four are fairly similar, they both contain respondents that have higher incomes. Clusters two and three contain respondents with lower incomes, with cluster three containing a wider variation.
+
+```{r}
 ggplot(alL_vars_data, aes(x = AGE7, group = clust4, fill = clust4)) +
     geom_density(adjust=3) +
   labs(title = "Distribution of Age by Cluster", 
@@ -148,7 +149,12 @@ ggplot(alL_vars_data, aes(x = AGE7, group = clust4, fill = clust4)) +
        y = "Density",
        fill = "Cluster Assignment") +
   facet_wrap(~clust4)
+```
 
+
+With the age distribution, the similar cluster pairs change. Clusters one and three seem to be closely related, with cluster three containing a slightly higher number of young respondents. On the other hand, clusters two and four contain older respondents.
+
+```{r}
 ggplot(data = alL_vars_data, aes(x=ECON4A, group = clust4, fill=clust4)) +
   geom_density(adjust = 5) +
   labs(title = "Distribution of ECON4A Answers by Cluster", 
