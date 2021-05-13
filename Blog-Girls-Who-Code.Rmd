@@ -19,26 +19,44 @@ library(GGally)
 library(ggmosaic)
 ```
 
-# COVID-19 Impact on Individual Economic Health
+# Introduction
 
-This project explores the impact of COVID-19 on individual economic health. We used data collected by the COVID Impact Survey. The COVID Impact Survey was an independent, non-governmental survey carried out by the Data Foundation in late spring of 2020 focusing on physical health, economic and food security, and employment. The data is publicly available in a csv format: https://www.covid-impact.org/results.
+While COVID has affected almost everyone in the US and around the world, it’s clear that the pandemic’s impact has not been felt equally. Americans of lower socioeconomic status before the pandemic have been disproportionately impacted by unemployment, food and housing insecurity, and health issues in the past year. As economic recovery policies are being created and implemented, it’s important to know how measures like stimulus packages should be targeted to help those who’ve dealt with the most extreme impacts of COVID-19. In order to help serve this need, this project explores how different demographic and economic health variables can predict a variety of impacts of the pandemic. 
 
-First, we will determine how respondents of the COVID Impact Survey group together based on various demographic and economic health questions using unsupervised learning and clustering. Then, we will examine the relationships between other demographic and economic health variables and cluster assignment.
+# Project overview
 
-# Part 1: Clustering Analysis
+This project uses the same COVID Impact Survey data as our Shiny app (link?), which we chose for the ability to explore relationships between different variables in a deeper and more meaningful way. The survey was administered by the Data Foundation, a non-governmental organization, in the late spring of 2020 and focuses on physical health, economic and food security, and unemployment. The data, and more information about the COVID Impact Survey, is available at this link (link here).
+In order to expand on our analysis in the Shiny app, we wanted to explore more holistic relationships in the data by making complex comparisons between multiple variables at once. We used k-means clustering to form groupings in the data based on similarities in a few variables, and then continued our analysis by determining whether these clusters could predict the values of other variables. Because the clusters were designed to group respondents by the degree to which they’d felt particular impacts of the pandemic, we compared them to both demographic variables as well as other economic health variables. This allowed us to further explore which variables in the dataset best predict impacts of COVID-19.
 
-First, we perform kmeans clustering analysis with 2 clusters, 4, clusters, 7 clusters, and 11 clusters.
+# Clustering analysis
 
-Our clustering analysis includes the following variables:
-* AGE7 - Age: 7 category
-* HHINCOME - Household income
-* EDUCATION - What is the highest level of school you have completed?
-* ECON4A - Think about 30 days from now, how likely do you think it is that you will be employed at that time?
-* ECON4B - Think about 3 months from now, how likely do you think it is that you will be employed at that time?
+One of the first steps we took was determining which variables would be best to use in the formation of the clusters. We had two primary requirements in mind: (a) variables have to be numeric and ordinal, and (b) variables should have enough variation to form clusters that are sufficiently different from each other. Because our data was based on a survey, almost all the variables were categorical. We chose variables that could be coerced into a numeric format, either because the question required the respondent to rate themselves on a scale or because the question had a set of other ordered, categorical answers. The variables we ended up including in the clustering were age (which has seven answers each of which included a range), household income (which is structured similar to age with nine categories), education (which has seven answers related to various levels of schooling), the respondent’s level of confidence that they would be employed in 30 days, and the respondent’s level of confidence that they would be employed in three months (both of which required the respondent rate themselves on a scale from one to five, with one being “Extremely likely”).
+Next, we created an elbow plot to compare the number of clusters with inter-cluster variation. We were looking for an “elbow” in the graph’s line where there would be a sharp decrease in the change in inter-cluster variation as the number of clusters increases. The point where this elbow occurs signals the optimal number of clusters for the data.
 
 ```{r}
-kmeans_data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/kmeans_data.csv") 
+kmeans_data <- read.csv("~/git/Blog-Girls-Who-Code/kmeans_data.csv") 
 
+fig <- matrix(NA, nrow=15, ncol=2)
+
+set.seed(75)
+for (i in 1:15){
+  fig[i,1] <- i
+  fig[i,2] <- kmeans(kmeans_data
+                    , centers=i
+                    , nstart=20)$tot.withinss
+}
+
+ggplot(data = as.data.frame(fig), aes(x = V1, y = V2)) +
+  geom_point() + 
+  geom_line() +
+  scale_x_continuous(breaks=c(1:15)) +
+  labs(x = "K", y = expression("Total W"[k]))
+
+```
+
+As we can see, there’s not a clear elbow in the plot for our data. While the decrease in inter-cluster variation definitely isn’t constant, the change decreases fairly steadily. We decided to perform the rest of our analysis using four clusters because the change in inter-cluster variation seems to decrease more noticeably after that point and the centroids of the clusters are more varied than the centroids of larger numbers of clusters.
+
+```{r}
 set.seed(23)
 km2_out <- kmeans(kmeans_data, centers = 2, nstart = 20)
 km2_out$centers
@@ -76,27 +94,8 @@ kmeans_data2 <- kmeans_data2 %>%
 
 ```
 
-Next, we determine which clustering analysis is best. We do this by creating an elbow plot to determine how many clusters are needed to produce a small amount of total with-in cluster variation. This plot does not display a definitive elbow. However, the decrease in total with-in cluster variation begins to get smaller after 4 clusters. For this reason, our analysis with 4 clusters is likely our best kmeans clustering analysis. We will use this analysis for the rest of our investigation.
+We then created a pairs diagram to examine the differences between the clusters. Unfortunately, it’s difficult to determine a clear pattern in the scatter and density plots. In order to understand how the clusters were formed, we created separate density plots to simplify the pairs diagram.
 
-```{r}
-fig <- matrix(NA, nrow=15, ncol=2)
-
-set.seed(75)
-for (i in 1:15){
-  fig[i,1] <- i
-  fig[i,2] <- kmeans(kmeans_data
-                    , centers=i
-                    , nstart=20)$tot.withinss
-}
-
-ggplot(data = as.data.frame(fig), aes(x = V1, y = V2)) +
-  geom_point() + 
-  geom_line() +
-  scale_x_continuous(breaks=c(1:15)) +
-  labs(x = "K", y = expression("Total W"[k]))
-```
-
-Finally, we can visualize our kmeans clustering analysis with 4 clusters below.
 
 ```{r}
 vars <- c("ECON4A", "ECON4B", "HHINCOME", "EDUCATION", "AGE7")
@@ -107,32 +106,12 @@ ggpairs(data = kmeans_data2
         , upper = list(continuous = "blank"))
 ```
 
-# Part 2: Post-Clustering Analysis
+While the original pairs diagram didn’t contain a lot of helpful information about the clusters, it was clear that income and age were driving variables in the cluster assignment (because the variation between clusters was most clear in the density plots for those variables). In order to explore clustering with these two variables more in-depth, we re-created the density plots while faceting by cluster assignment. As we can see, clusters one and four are fairly similar, they both contain respondents that have higher incomes. Clusters two and three contain respondents with lower incomes, with cluster three containing a wider variation.
 
-Now, we want to explore the relationship between cluster assignment and a number of different demographic and economic health variables. 
-
-The demographic variables of interest are: 
-* GENDER - Are you male or female?
-* RACETH - Race/ethnicity
-* P_DENSE - Population density
-
-The economic health variables of interest are:
-* ECON6A - [Unemployment insurance] In the past 7 days, have you either received, applied for, or tried to apply for any of the following forms of income or assistance, or not?
-* ECON6C - [TANF (Temporary Assistance for Needy Families)] In the past 7 days, have you either received, applied for, or tried to apply for any of the following forms of income or assistance, or not?
-* ECON7_1 - [Put it on my credit card and pay it off in full at the next statement] Based on your current financial situation, how would you pay for this expense?
-* ECON7_2 - [Put it on my credit card and pay it off over time] Based on your current financial situation, how would you pay for this expense?
-* ECON7_3 - [Use money currently in my checking or savings account or with cash] Based on your current financial situation, how would you pay for this expense?
-* ECON7_4 - [Use money from a bank loan or line of credit] Based on your current financial situation, how would you pay for this expense?
-* ECON7_5 - [Borrow from a friend or family member] Based on your current financial situation, how would you pay for this expense?
-* ECON7_6 - [Use a payday loan, deposit advance or overdraft] Based on your current financial situation, how would you pay for this expense?
-* ECON7_7 - [Sell something] Based on your current financial situation, how would you pay for this expense?
-* ECON7_8 - [I would not be able to pay for it right now] Based on your current financial situation, how would you pay for this expense?
-* ECON5A_B - [The food that we bought just didn't last, and we didn't have money to get more] Please indicate whether the following statements were often true, sometimes true, or never true for you or your household over the past 30 days.
-
-First, we create visualizations to explore the relationship between cluster assignment and our demographic variables of interest. 
+With age distribution, the similar cluster pairs change. Clusters one and three seem to be closely related, with cluster three containing a slightly higher number of young respondents. On the other hand, clusters two and four contain older respondents.
 
 ```{r}
-post_cluster_vars <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/post_cluster_data.csv")
+post_cluster_vars <- read.csv("~/git/Blog-Girls-Who-Code/post_cluster_data.csv")
   
 alL_vars_data <- post_cluster_vars %>% 
   left_join(kmeans_data2, by = "AGE7") 
@@ -151,7 +130,17 @@ ggplot(alL_vars_data, aes(x = AGE7, group = clust4, fill = clust4)) +
        fill = "Cluster Assignment") +
   facet_wrap(~clust4)
 ```
+```{r}
+ggplot(data = alL_vars_data, aes(x=ECON4A, group = clust4, fill=clust4)) +
+  geom_density(adjust = 5) +
+  facet_wrap(~clust4)
 
+ggplot(data = alL_vars_data, aes(x=ECON4B, group = clust4, fill=clust4)) +
+  geom_density(adjust = 5) +
+  facet_wrap(~clust4)
+```
+
+In the density plot comparing cluster assignment and both of the employment likelihood variables, it’s clear that clusters one and three are quite similar, as are clusters two and four. Clusters two and four are less confident as whole about their future employment, whereas clusters one and three are less confident. One notable difference between clusters one and three, in the graph for 30 day employment confidence, is that cluster three is more spread out across the variable, whereas cluster one contains more confident respondents.
 
 ```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = GENDER2)) +
