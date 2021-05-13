@@ -20,7 +20,7 @@ library(ggmosaic)
 
 While COVID has affected almost everyone in the US and around the world, it is clear that the pandemic’s impact has not been felt equally. Americans of lower socioeconomic status before the pandemic have been disproportionately impacted by unemployment, food and housing insecurity, and health issues in the past year. As economic recovery policies are being created and implemented, it is important to know how measures like stimulus packages should be targeted to help those who have dealt with the most extreme impacts of COVID-19. In order to help serve this need, this project explores how different demographic and economic health variables can predict a variety of impacts of the pandemic. 
 
-![CDC Illusration of the COVID-19 Virus](~/Desktop/DataScience/git/Blog-Girls-Who-Code/Coronavirus-CDC-1600x900.jpg)
+![CDC Illustration of the COVID-19 Virus](Coronavirus-CDC-1600x900.jpg)
 
 # Project overview
 
@@ -124,7 +124,7 @@ As we can see, clusters one and four are fairly similar, they both contain respo
 With the age distribution, the similar cluster pairs change. Clusters one and three seem to be closely related, with cluster three containing a slightly higher number of young respondents. On the other hand, clusters two and four contain older respondents.
 
 ```{r}
-# Adding cluster assignments to datasset with all variables of interest (relevent later)
+# Adding cluster assignments to dataset with all variables of interest (relevant later)
 
 post_cluster_vars <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/post_cluster_data.csv")
   
@@ -266,25 +266,3 @@ Kamil Slowikowski (2021). ggrepel: Automatically Position
   
 Wickham et al., (2019). Welcome to the tidyverse. Journal of Open
   Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
-
-
-
-# You can even create tabs if you want! {.tabset .tabset-fade .tabset-pills}
-
-## Bulleted list
-
-You can make a bulleted list like this:
-
-- item 1
-- item 2
-- item 3
-
-
-## Numbered list
-
-You can make a numbered list like this
-
-1. First thing I want to say
-2. Second thing I want to say
-3. Third thing I want to say
-
