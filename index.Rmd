@@ -135,24 +135,34 @@ alL_vars_data <- post_cluster_vars %>%
 
 ggplot(alL_vars_data, aes(x = HHINCOME, group = clust4, fill = clust4)) +
     geom_density(adjust=3) + 
-  labs(title = "Distribution of Income By Cluster", 
+  labs(title = "Distribution of Income by Cluster", 
        x = "Income", 
+       y = "Density",
        fill = "Cluster Assignment") + 
   facet_wrap(~clust4)
 
 ggplot(alL_vars_data, aes(x = AGE7, group = clust4, fill = clust4)) +
     geom_density(adjust=3) +
-  labs(title = "Distribution of Age By Cluster", 
+  labs(title = "Distribution of Age by Cluster", 
        x = "Age Group", 
+       y = "Density",
        fill = "Cluster Assignment") +
   facet_wrap(~clust4)
 
 ggplot(data = alL_vars_data, aes(x=ECON4A, group = clust4, fill=clust4)) +
   geom_density(adjust = 5) +
+  labs(title = "Distribution of ECON4A Answers by Cluster", 
+       x = "ECON4A Answers", 
+       y = "Density",
+       fill = "Cluster Assignment") +
   facet_wrap(~clust4)
 
 ggplot(data = alL_vars_data, aes(x=ECON4B, group = clust4, fill=clust4)) +
   geom_density(adjust = 5) +
+  labs(title = "Distribution of ECON4B Answers by Cluster", 
+       x = "ECON4B Answers", 
+       y = "Density",
+       fill = "Cluster Assignment") +
   facet_wrap(~clust4)
 ```
 
@@ -173,12 +183,14 @@ ggplot(alL_vars_data, aes(x = clust4, fill = GENDER2)) +
   geom_bar(position = "fill") +
   labs(title = "Gender Proportions by Cluster Assignment", 
        x = "Cluster Assignment", 
+       y = "Proportion",
        fill = "Gender") 
 
 ggplot(alL_vars_data, aes(x = clust4, fill = P_DENSE2)) +
   geom_bar(position = "fill") +
   labs(title = "Population Density Proportions by Cluster Assignment", 
        x = "Cluster Assignment", 
+       y = "Proportion",
        fill = "Population Density")
 ```
 
@@ -187,9 +199,10 @@ Unlike the plots above, the plot below shows how the proportions of reported rac
 ```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = RACETH2)) +
   geom_bar(position = "fill") +
-  labs(title = "Race Proportions by Cluster Assignment", 
+  labs(title = "Racial Background Proportions by Cluster Assignment", 
        x = "Cluster Assignment", 
-       fill = "Race")
+       y = "Proportion",
+       fill = "Racial Background")
 ```
 
 After exploring the relationship between our categorical demographic variables and cluster assignment, we investigated the proportions of responses to individual economic health questions across clusters. We used the following economic health variables in this investigation:
@@ -206,8 +219,9 @@ The plot below shows that the proportion of responses to the TANF status questio
 ```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = ECON6C_2)) +
   geom_bar(position = "fill") +
-  labs(title = "Proportions of TANF Status Cluster Assignment", 
+  labs(title = "Proportions of TANF Status by Cluster Assignment", 
        x = "Cluster Assignment", 
+       y = "Proportion",
        fill = "TANF Status")
 ```
 
@@ -216,8 +230,10 @@ The next visualization, presented below, demonstrates how the proportion of resp
 ```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = ECON6A_2)) +
   geom_bar(position = "fill") +
-  labs(title = "Proportions of Unemployment Insurance Status Cluster Assignment", 
+  labs(title = "Proportions of Unemployment Insurance Status by Cluster
+       Assignment", 
        x = "Cluster Assignment", 
+       y = "Proportion",
        fill = "Unemployment Insurance Status")
 ```
 
@@ -226,8 +242,9 @@ Our final visualization illustrates the relationship between cluster assignment 
 ```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = ECON5A_B2)) +
   geom_bar(position = "fill") +
-  labs(title = "Proportions of Food Security Levels Status Cluster Assignment", 
+  labs(title = "Proportions of Food Security Levels Status by Cluster Assignment", 
        x = "Cluster Assignment", 
+       y = "Proportion",
        fill = "Level of Food Security")
 ```
 
