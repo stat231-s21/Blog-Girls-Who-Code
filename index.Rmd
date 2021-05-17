@@ -235,17 +235,17 @@ A majority of respondents reported that they did not apply for TANF across all f
 
 ```{r, echo=FALSE}
 TANF_data <- alL_vars_data %>% 
-  filter(ECON6C_2 != "Did not apply") %>% 
   select(clust4, ECON6C_2) %>% 
   group_by(clust4) %>% 
-  summarise(did_not_apply = prop.table("Did not apply", margin = ECON6C_2))
+  mutate(count = n()) %>% 
+  group_by(clust4, ECON6C_2) %>% 
+  summarize(prop = n()/count)
 ```
 
 ```{r, results='asis'}
 knitr::kable(TANF_data, "latex", booktabs = TRUE, escape = FALSE, 
              col.names = 
-               c("Cluster Assignmnet", "Class Code", "Class Type", "Hours Spent on HW", 
-                 "Hours Spent in Class", "Total Hours"))%>% 
+               c(""))%>% 
   kableExtra::kable_styling(position = "center", row_label_position = "c", 
                             latex_options = "hold_position")
 ```
