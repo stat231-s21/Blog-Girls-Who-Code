@@ -22,13 +22,15 @@ While COVID has affected almost everyone in the US and around the world, it is c
 
 ![CDC Illustration of the COVID-19 Virus](Coronavirus-CDC-1600x900.jpg)
 
-# Project Overview
+## Project Overview
 
 This project uses the same COVID Impact Survey data as our [Shiny app](https://maggie-smth.shinyapps.io/COVID-proj/), which we chose for the ability to explore relationships between different variables in a deeper and more meaningful way. The survey was administered by the Data Foundation, a non-governmental organization, and focuses on physical health, economic and food security, and unemployment. This survey included 2,047 adults was conducted from May 30th to June 8th using a sample drawn from NORC’s probability-based AmeriSpeak Panel, which is designed to be representative of the U.S. population. The data, and more information about the COVID Impact Survey, is available [here](https://www.covid-impact.org). 
 
 In order to expand on our Shiny app analysis, we wanted to explore more holistic relationships in the data by making complex comparisons between multiple variables at once. We used k-means clustering to form groupings in the data based on similarities in a few variables, and then continued our analysis by determining whether these clusters could predict the values of other variables. Because the clusters were designed to group respondents by the degree to which they’d felt particular impacts of the pandemic, we compared them to both demographic variables as well as other economic health variables. This allowed us to further explore which variables in the dataset best predict impacts of COVID-19 on individual economic health.
 
 # Clustering Analysis
+
+## K-Means Clustering
 
 One of the first steps we took was determining which variables would be best to use in the formation of the clusters. We had two primary requirements in mind: (a) variables have to be numeric and ordinal, and (b) variables should have enough variation to form clusters that are sufficiently different from each other. Because our data was based on a survey, almost all the variables were categorical. We chose variables that could be coerced into a numeric format, either because the question required the respondent to rate themselves on a scale or because the question had a set of other ordered, categorical answers. The variables we ended up including in the clustering were:
 
@@ -103,6 +105,8 @@ kmeans_data2 <- kmeans_data2 %>%
 
 As we can see, there’s not a clear elbow in the plot for our data. While the decrease in inter-cluster variation definitely isn’t constant, the change decreases fairly steadily. We decided to perform the rest of our analysis using four clusters because the change in inter-cluster variation seems to decrease more noticeably after that point and the centroids of the clusters are more varied than the centroids of larger numbers of clusters.
 
+## Pairs Diagram
+
 We then created a pairs diagram to examine the differences between the clusters. Unfortunately, it’s difficult to determine a clear pattern in the scatter and density plots. In order to understand how the clusters were formed, we created separate density plots to simplify the pairs diagram.
 
 
@@ -118,6 +122,8 @@ ggpairs(data = kmeans_data2
 ```
 
 While the original pairs diagram didn’t contain a lot of helpful information about the clusters, it was clear that income and age were driving variables in the cluster assignment (because the variation between clusters was most clear in the density plots for those variables). In order to explore clustering with these two variables more in-depth, we re-created the density plots while faceting by cluster assignment. 
+
+## Density Plots
 
 ```{r}
 # Adding cluster assignments to dataset with all variables of interest (relevant later)
@@ -137,7 +143,6 @@ ggplot(alL_vars_data, aes(x = HHINCOME, group = clust4, fill = clust4)) +
        fill = "Cluster Assignment") + 
   facet_wrap(~clust4)
 ```
-
 
 As we can see, clusters one and four are fairly similar, they both contain respondents that have higher incomes. Clusters two and three contain respondents with lower incomes, with cluster three containing a wider variation.
 
@@ -172,11 +177,15 @@ ggplot(data = alL_vars_data, aes(x=ECON4B, group = clust4, fill=clust4)) +
   facet_wrap(~clust4)
 ```
 
-In the density plot comparing cluster assignment and both of the employment likelihood variables, it’s clear that clusters one and three are quite similar, as are clusters two and four. Clusters two and four are less confident as whole about their future employment, whereas clusters one and three are less confident. One notable difference between clusters one and three, in the graph for 30 day employment confidence, is that cluster three is more spread out across the variable, whereas cluster one contains more confident respondents.
+In the density plot comparing cluster assignment and both of the employment likelihood variables, it is clear that clusters one and three are quite similar, as are clusters two and four. Clusters two and four are less confident as whole about their future employment, whereas clusters one and three are less confident. One notable difference between clusters one and three, in the graph for 30 day employment confidence, is that cluster three is more spread out across the variable, whereas cluster one contains more confident respondents.
 
 # Post-Clustering Analysis
 
-After performing our clustering analysis, we explored the relationship between different demographic and economic health variables and cluster assignment. The goal of this post-clustering analysis was to determine if cluster assignment could predict responses to a number of different demographic and economic health questions included in the COVID-Impact survey. First, we examined the proportions of categorical demographic variable responses across clusters. The following demographic variables were used in this investigation:
+After performing our clustering analysis, we explored the relationship between different demographic and economic health variables and cluster assignment. The goal of this post-clustering analysis was to determine if cluster assignment could predict responses to a number of different demographic and economic health questions included in the COVID-Impact survey. 
+
+## Demographic Variables
+
+First, we examined the proportions of categorical demographic variable responses across clusters. The following demographic variables were used in this investigation:
 
 * Gender: Male or Female
 * Racial Background: Black (non-Hispanic), Hispanic, Other (non-Hispanic), White (non-Hispanic)
@@ -211,6 +220,8 @@ ggplot(alL_vars_data, aes(x = clust4, fill = RACETH2)) +
        fill = "Racial Background")
 ```
 
+## Economic Health Variables
+
 After exploring the relationship between our categorical demographic variables and cluster assignment, we investigated the proportions of responses to individual economic health questions across clusters. We used the following economic health variables in this investigation:
 
 * Unemployment Insurance
@@ -220,7 +231,7 @@ After exploring the relationship between our categorical demographic variables a
 * Food Security
   - Please indicate whether the following statement was often true, sometimes true, or never true for you or your household over the past 30 days: “The food that we bought just didn't last, and we didn't have money to get more.”
   
-The plot below shows that the proportion of responses to the TANF status question did not differ greatly across clusters. The blue and the purple bars are slightly greater in clusters one and three, indicating that respondents in these clusters were slightly more likely to have tried to apply for TANF or to have received TANF. However, as over 95% of participants reported that they did not apply for TANF across all four clusters, cluster assignment does not predict very interesting or relevant variation in responses to the TANF status question.
+The plot below shows the proportion of responses to the TANF status question.
 
 ```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = ECON6C_2)) +
@@ -231,25 +242,24 @@ ggplot(alL_vars_data, aes(x = clust4, fill = ECON6C_2)) +
        fill = "TANF Status")
 ```
 
-A majority of respondents reported that they did not apply for TANF across all four clusters. As a result, it is hard to visualize the proportions of respondents who may have applied for, tried to apply for, or received TANF. For this reason, instead of creating a plot, we created the table below to analyze differences in proportions of responses to the TANF question.
+A majority of respondents reported that they did not apply for TANF across all four clusters. As a result, it is hard to visualize the proportions of respondents who may have applied for, tried to apply for, did not apply for, or received TANF in th plot above. For this reason, we also created the table below to analyze differences in proportions of responses to the TANF question. As over 95% of participants reported that they did not apply for TANF across all four clusters, cluster assignment does not predict very interesting or relevant variation in responses to the TANF status question. However, this table shows that respondents in clusters one and three reported that they tried to apply for or received TANF at a higher rate.
 
 ```{r, echo=FALSE}
-TANF_data <- alL_vars_data %>% 
-  select(clust4, ECON6C_2) %>% 
-  group_by(clust4) %>% 
-  mutate(count = n()) %>% 
-  group_by(clust4, ECON6C_2) %>% 
-  summarize(prop = n()/count)
+TANF_data <- mosaic::tally(ECON6C_2 ~ clust4, data = alL_vars_data, format = "percent") %>% 
+  as.data.frame() %>% 
+  pivot_wider(names_from = ECON6C_2, values_from = Freq)
 ```
 
 ```{r, results='asis'}
 knitr::kable(TANF_data, "latex", booktabs = TRUE, escape = FALSE, 
-             col.names = 
-               c(""))%>% 
+             col.names = c("Cluster Assignmnet", 
+                           "Applied", 
+                           "Did Not Apply", 
+                           "Recieved", 
+                           "Tried to Appy"))%>% 
   kableExtra::kable_styling(position = "center", row_label_position = "c", 
                             latex_options = "hold_position")
 ```
-
 
 The next visualization, presented below, demonstrates how the proportion of responses to the unemployment insurance questions change across clusters. The blue bars are larger in clusters one and three than in clusters two and four. This finding indicates that clusters one and three received unemployment insurance at a higher rate than respondents in clusters two and four. The purple bar is also largest in cluster three, indicating that respondents in cluster three tried to apply for unemployment insurance at a higher rate than respondents in the other clusters. However, as approximately 90% of respondents in each cluster did not apply for unemployment insurance, cluster assignment does not predict very interesting or relevant patterns of responses to the unemployment insurance status question.
 
