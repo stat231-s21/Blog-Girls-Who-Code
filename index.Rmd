@@ -1,7 +1,7 @@
 ---
 title: "COVID-19 Impact on Individual Economic Health"
 author: "Maggie Smith & Sammy Phillips"
-date: "05/12/2021"
+date: "05/19/2021"
 output:
   rmdformats::readthedown:
     thumbnails: false
