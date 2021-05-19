@@ -18,7 +18,7 @@ library(ggmosaic)
 
 # Introduction
 
-While COVID has affected almost everyone in the US and around the world, it is clear that the pandemic’s impact has not been felt equally. Americans of lower socioeconomic status before the pandemic have been disproportionately impacted by unemployment, food and housing insecurity, and health issues in the past year. As economic recovery policies are being created and implemented, it is important to know how measures like stimulus packages should be targeted to help those who have dealt with the most extreme impacts of COVID-19. In order to help serve this need, this project explores how different demographic and economic health variables can predict a variety of impacts of the pandemic. 
+While COVID has affected almost everyone in the US and around the world, it is clear that the pandemic’s impact has not been felt equally. Americans of lower socioeconomic status before the pandemic have been disproportionately impacted by unemployment, food and housing insecurity, and health issues in the past year. As economic recovery policies are being created and implemented, it is important to know how measures like stimulus packages should be targeted to help those who have dealt with the most extreme impacts of COVID-19. In order to serve this need, this project explores how different demographic and economic health variables can predict a variety of impacts of the pandemic. 
 
 ![CDC Illustration of the COVID-19 Virus](Coronavirus-CDC-1600x900.jpg)
 
@@ -103,7 +103,7 @@ kmeans_data2 <- kmeans_data2 %>%
 
 As we can see, there’s not a clear elbow in the plot for our data. While the decrease in inter-cluster variation definitely isn’t constant, the change decreases fairly steadily. We decided to perform the rest of our analysis using four clusters because the change in inter-cluster variation seems to decrease more noticeably after that point and the centroids of the clusters are more varied than the centroids of larger numbers of clusters.
 
-We then created a pairs diagram to examine the differences between the clusters. Unfortunately, it’s difficult to determine a clear pattern in the scatter and density plots. In order to understand how the clusters were formed, we created separate density plots to simplify the pairs diagram.
+We then created a pairs diagram to examine the differences between the clusters. Unfortunately, it’s difficult to determine a clear pattern in the scatter and density plots. 
 
 
 ```{r}
@@ -172,7 +172,7 @@ ggplot(data = alL_vars_data, aes(x=ECON4B, group = clust4, fill=clust4)) +
   facet_wrap(~clust4)
 ```
 
-In the density plot comparing cluster assignment and both of the employment likelihood variables, it’s clear that clusters one and three are quite similar, as are clusters two and four. Clusters two and four are less confident as whole about their future employment, whereas clusters one and three are less confident. One notable difference between clusters one and three, in the graph for 30 day employment confidence, is that cluster three is more spread out across the variable, whereas cluster one contains more confident respondents.
+In the density plot comparing cluster assignment and both of the employment likelihood variables, it’s clear that clusters one and three are quite similar, as are clusters two and four. Clusters two and four are less confident as whole about their future employment, whereas clusters one and three are more confident. One notable difference between clusters one and three, in the graph for 30 day employment confidence, is that cluster three is more spread out across the variable, whereas cluster one contains more confident respondents.
 
 # Post-Clustering Analysis
 
