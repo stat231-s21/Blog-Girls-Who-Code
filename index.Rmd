@@ -1,7 +1,7 @@
 ---
 title: "COVID-19 Impact on Individual Economic Health"
 author: "Maggie Smith & Sammy Phillips"
-date: "05/12/2021"
+date: "05/19/2021"
 output:
   rmdformats::readthedown:
     thumbnails: false
@@ -22,15 +22,17 @@ While COVID has affected almost everyone in the US and around the world, it is c
 
 ![CDC Illustration of the COVID-19 Virus](Coronavirus-CDC-1600x900.jpg)
 
-# Project Overview
+## Project Overview
 
 This project uses the same COVID Impact Survey data as our [Shiny app](https://maggie-smth.shinyapps.io/COVID-proj/), which we chose for the ability to explore relationships between different variables in a deeper and more meaningful way. The survey was administered by the Data Foundation, a non-governmental organization, and focuses on physical health, economic and food security, and unemployment. This survey included 2,047 adults was conducted from May 30th to June 8th using a sample drawn from NORC’s probability-based AmeriSpeak Panel, which is designed to be representative of the U.S. population. The data, and more information about the COVID Impact Survey, is available [here](https://www.covid-impact.org). 
 
-In order to expand on our Shiny app analysis, we wanted to explore more holistic relationships in the data by making complex comparisons between multiple variables at once. We used k-means clustering to form groupings in the data based on similarities in a few variables, and then continued our analysis by determining whether these clusters could predict the values of other variables. Because the clusters were designed to group respondents by the degree to which they’d felt particular impacts of the pandemic, we compared them to both demographic variables as well as other economic health variables. This allowed us to further explore which variables in the dataset best predict impacts of COVID-19 on individual economic health.
+In order to expand our Shiny app analysis, we wanted to explore more holistic relationships in the data by making complex comparisons between multiple variables at once. First, we used k-means clustering to form groupings in the data based on similarities in a few variables. We then continued our analysis by determining whether these clusters could predict the values of other variables. Because the clusters were designed to group respondents by the degree to which they had felt particular impacts of the pandemic, we explored the relationship between cluster assignment and both demographic and economic health variables. This allowed us to further explore which variables in the dataset best predict impacts of COVID-19 on individual economic health.
 
 # Clustering Analysis
 
-One of the first steps we took was determining which variables would be best to use in the formation of the clusters. We had two primary requirements in mind: (a) variables have to be numeric and ordinal, and (b) variables should have enough variation to form clusters that are sufficiently different from each other. Because our data was based on a survey, almost all the variables were categorical. We chose variables that could be coerced into a numeric format, either because the question required the respondent to rate themselves on a scale or because the question had a set of other ordered, categorical answers. The variables we ended up including in the clustering were:
+## K-Means Clustering
+
+One of the first steps we took was determining which variables would be best to use to form our clusters. We had two primary requirements in mind: (a) variables have to be numeric and ordinal, and (b) variables should have enough variation to form clusters that are sufficiently different from each other. Because our data was based on a survey, almost all the variables were categorical. We chose variables that could be coerced into a numeric format, either because the question required the respondent to rate themselves on a scale or because the question had a set of other ordered, categorical answers. The variables we ended up including in our clustering analysis were:
 
 * Age (which has seven answers each of which included a range)
 * Household Income (which is structured similar to age with nine categories)
@@ -42,7 +44,7 @@ One of the first steps we took was determining which variables would be best to 
 Next, we created an elbow plot to compare the number of clusters with inter-cluster variation. We were looking for an “elbow” in the graph’s line where there would be a sharp decrease in the change in inter-cluster variation as the number of clusters increases. The point where this elbow occurs signals the optimal number of clusters for the data.
 
 ```{r}
-kmeans_data <- read.csv("~/git/Blog-Girls-Who-Code/kmeans_data.csv") 
+kmeans_data <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/kmeans_data.csv") 
 
 # Creating elbow plot
 
@@ -101,10 +103,18 @@ kmeans_data2 <- kmeans_data2 %>%
 
 ```
 
-As we can see, there’s not a clear elbow in the plot for our data. While the decrease in inter-cluster variation definitely isn’t constant, the change decreases fairly steadily. We decided to perform the rest of our analysis using four clusters because the change in inter-cluster variation seems to decrease more noticeably after that point and the centroids of the clusters are more varied than the centroids of larger numbers of clusters.
+As we can see, there is not a clear elbow in the plot for our data. While the decrease in inter-cluster variation is not constant, this decrease changes fairly steadily. We decided to perform the rest of our analysis using four clusters for two reasons:
 
+1. The change in inter-cluster variation seems to decrease more slowly after the use of four clusters.
+2. The centroids of our four cluster k-means analysis are more varied than the centroids of our k-means analyses with larger numbers of clusters.
+
+<<<<<<< HEAD
 We then created a pairs diagram to examine the differences between the clusters. Unfortunately, it’s difficult to determine a clear pattern in the scatter and density plots. 
+=======
+## Pairs Diagram
+>>>>>>> a22b74997139b2a961f0fcf6930470f1309783f2
 
+We then created a pairs diagram to examine differences between the clusters. Unfortunately, it is difficult to determine a clear pattern in the scatter and density plots. In order to better understand the variables driving cluster formation, we created separate density plots to simplify the pairs diagram.
 
 ```{r}
 # Creating pairs diagram 
@@ -117,12 +127,16 @@ ggpairs(data = kmeans_data2
         , upper = list(continuous = "blank"))
 ```
 
-While the original pairs diagram didn’t contain a lot of helpful information about the clusters, it was clear that income and age were driving variables in the cluster assignment (because the variation between clusters was most clear in the density plots for those variables). In order to explore clustering with these two variables more in-depth, we re-created the density plots while faceting by cluster assignment. 
+While the original pairs diagram did not contain a lot of helpful information about the clusters, it was clear that income and age were driving variables in the cluster assignment. The variation between clusters was most clear in the density plots for these variables. 
+
+## Density Plots
+
+In order to further explore the patterns observed from our pairs diagram, we created the following density plots. These plots show the distribution of responses to the age and income questions across clusters.
 
 ```{r}
 # Adding cluster assignments to dataset with all variables of interest (relevant later)
 
-post_cluster_vars <- read.csv("~/git/Blog-Girls-Who-Code/post_cluster_data.csv")
+post_cluster_vars <- read.csv("~/Desktop/DataScience/git/Blog-Girls-Who-Code/post_cluster_data.csv")
   
 alL_vars_data <- post_cluster_vars %>% 
   left_join(kmeans_data2, by = "AGE7") 
@@ -138,7 +152,6 @@ ggplot(alL_vars_data, aes(x = HHINCOME, group = clust4, fill = clust4)) +
   facet_wrap(~clust4)
 ```
 
-
 As we can see, clusters one and four are fairly similar, they both contain respondents that have higher incomes. Clusters two and three contain respondents with lower incomes, with cluster three containing a wider variation.
 
 ```{r}
@@ -150,7 +163,6 @@ ggplot(alL_vars_data, aes(x = AGE7, group = clust4, fill = clust4)) +
        fill = "Cluster Assignment") +
   facet_wrap(~clust4)
 ```
-
 
 With the age distribution, the similar cluster pairs change. Clusters one and three seem to be closely related, with cluster three containing a slightly higher number of young respondents. On the other hand, clusters two and four contain older respondents.
 
@@ -172,11 +184,19 @@ ggplot(data = alL_vars_data, aes(x=ECON4B, group = clust4, fill=clust4)) +
   facet_wrap(~clust4)
 ```
 
+<<<<<<< HEAD
 In the density plot comparing cluster assignment and both of the employment likelihood variables, it’s clear that clusters one and three are quite similar, as are clusters two and four. Clusters two and four are less confident as whole about their future employment, whereas clusters one and three are more confident. One notable difference between clusters one and three, in the graph for 30 day employment confidence, is that cluster three is more spread out across the variable, whereas cluster one contains more confident respondents.
+=======
+In the density plots comparing cluster assignment and both of the employment likelihood variables, it is clear that clusters one and three are quite similar, as are clusters two and four. Clusters two and four are less confident as whole about their future employment, whereas clusters one and three are less confident. In the graph for 30 day employment confidence, one notable difference between clusters one and three is that cluster three is more spread out across the variable, whereas cluster one contains more confident respondents.
+>>>>>>> a22b74997139b2a961f0fcf6930470f1309783f2
 
 # Post-Clustering Analysis
 
-After performing our clustering analysis, we explored the relationship between different demographic and economic health variables and cluster assignment. The goal of this post-clustering analysis was to determine if cluster assignment could predict responses to a number of different demographic and economic health questions included in the COVID-Impact survey. First, we examined the proportions of categorical demographic variable responses across clusters. The following demographic variables were used in this investigation:
+After performing our clustering analysis, we explored the relationship between different demographic and economic health variables and cluster assignment. The goal of this post-clustering analysis was to determine if cluster assignment could predict responses to a number of different demographic and economic health questions included in the COVID-Impact survey. 
+
+## Demographic Variables
+
+First, we examined the proportions of categorical demographic variable responses across clusters. The following demographic variables were used in this investigation:
 
 * Gender: Male or Female
 * Racial Background: Black (non-Hispanic), Hispanic, Other (non-Hispanic), White (non-Hispanic)
@@ -211,16 +231,18 @@ ggplot(alL_vars_data, aes(x = clust4, fill = RACETH2)) +
        fill = "Racial Background")
 ```
 
+## Economic Health Variables
+
 After exploring the relationship between our categorical demographic variables and cluster assignment, we investigated the proportions of responses to individual economic health questions across clusters. We used the following economic health variables in this investigation:
 
 * Unemployment Insurance
   - Question: In the past 7 days, have you either received, applied for, or tried to apply for any of the following forms of income or assistance, or not?
 * TANF (Temporary Assistance for Needy Families) 
-  - In the past 7 days, have you either received, applied for, or tried to apply for any of the following forms of income or assistance, or not?
+  - Question: In the past 7 days, have you either received, applied for, or tried to apply for any of the following forms of income or assistance, or not?
 * Food Security
-  - Please indicate whether the following statement was often true, sometimes true, or never true for you or your household over the past 30 days: “The food that we bought just didn't last, and we didn't have money to get more.”
+  - Question: Please indicate whether the following statement was often true, sometimes true, or never true for you or your household over the past 30 days, “The food that we bought just didn't last, and we didn't have money to get more.”
   
-The plot below shows that the proportion of responses to the TANF status question did not differ greatly across clusters. The blue and the purple bars are slightly greater in clusters one and three, indicating that respondents in these clusters were slightly more likely to have tried to apply for TANF or to have received TANF. However, as over 95% of participants reported that they did not apply for TANF across all four clusters, cluster assignment does not predict very interesting or relevant variation in responses to the TANF status question.
+The plot below shows the proportion of responses to the TANF status question across clusters.
 
 ```{r}
 ggplot(alL_vars_data, aes(x = clust4, fill = ECON6C_2)) +
@@ -229,6 +251,24 @@ ggplot(alL_vars_data, aes(x = clust4, fill = ECON6C_2)) +
        x = "Cluster Assignment", 
        y = "Proportion",
        fill = "TANF Status")
+```
+
+A majority of respondents reported that they did not apply for TANF across all four clusters. As a result, it is hard to visualize the proportions of respondents who may have applied for, tried to apply for, or received TANF in the plot above. For this reason, we also created the table below to analyze differences in proportions of responses to the TANF question. As over 97% of participants reported that they did not apply for TANF across all four clusters, cluster assignment does not predict very interesting or relevant variation in responses to the TANF status question. However, this table shows that respondents in clusters one and three reported that they tried to apply for or received TANF at a higher rate than respondents in clusters two and four.
+
+```{r, include=FALSE}
+TANF_data <- mosaic::tally(ECON6C_2 ~ clust4, data = alL_vars_data, format = "percent") %>% 
+  as.data.frame() %>% 
+  pivot_wider(names_from = ECON6C_2, values_from = Freq)
+```
+
+```{r}
+knitr::kable(TANF_data, col.names = c("Cluster Assignmnet", 
+                                      "Applied", 
+                                      "Did Not Apply", 
+                                      "Recieved", 
+                                      "Tried to Appy")) %>% 
+  kableExtra::kable_styling(position = "center", row_label_position = "c", 
+                            latex_options = "hold_position")
 ```
 
 The next visualization, presented below, demonstrates how the proportion of responses to the unemployment insurance questions change across clusters. The blue bars are larger in clusters one and three than in clusters two and four. This finding indicates that clusters one and three received unemployment insurance at a higher rate than respondents in clusters two and four. The purple bar is also largest in cluster three, indicating that respondents in cluster three tried to apply for unemployment insurance at a higher rate than respondents in the other clusters. However, as approximately 90% of respondents in each cluster did not apply for unemployment insurance, cluster assignment does not predict very interesting or relevant patterns of responses to the unemployment insurance status question.
@@ -241,6 +281,8 @@ ggplot(alL_vars_data, aes(x = clust4, fill = ECON6A_2)) +
        x = "Cluster Assignment", 
        y = "Proportion",
        fill = "Unemployment Insurance Status")
+
+
 ```
 
 Our final visualization illustrates the relationship between cluster assignment and the proportions of reported levels of food security. As can be seen below, the blue and green bars are thicker in clusters one and three and the red bars are thicker in clusters two and four. This variance in proportion of reported food security levels suggests that respondents in clusters one and three ran out of food due to financial problems at a higher rate than participants in clusters two and four. Therefore, cluster assignment is able to predict interesting differences in the responses to the question about food security.
@@ -254,17 +296,19 @@ ggplot(alL_vars_data, aes(x = clust4, fill = ECON5A_B2)) +
        fill = "Level of Food Security")
 ```
 
-# Limitations & Extensions 
+# Limitations
 
-There are several aspects of the current data which limit the scope of our results. First, the data for this survey was collected from May to June of 2020, less than three months after COVID-19 was declared a global pandemic. This pandemic has evolved in many ways since June and its impact on the economy has changed accordingly. Therefore, the results of this project only reflect the early impact of the pandemic on individual economic health and more research is necessary to determine longer term effects. Also, as this data was collected after the pandemic began, it is hard to compare individual economic well-being before and after COVID-19. While the current findings indicate the economic health of respondents during the pandemic, without a comparison to pre-pandemic numbers, we are unable to definitively say that any of economic health trends found were caused by the COVID-19 pandemic.
+There are several aspects of the current data which limit the scope of our results. First, the data for this survey was collected from May to June of 2020, less than three months after COVID-19 was declared a global pandemic. This pandemic has evolved in many ways since June and its impact on the economy has changed accordingly. Therefore, the results of this project only reflect the early impact of the pandemic on individual economic health and more research is necessary to determine longer term effects. Also, as this data was collected after the pandemic began, it is hard to compare individual economic well-being before and after COVID-19. While the current findings indicate the economic health of respondents during the beginning of the pandemic, without a comparison to pre-pandemic numbers, we are unable to definitively say that any of economic health trends found were caused by COVID-19.
 
-In addition, the coercion of categorical variables during our clustering-analysis limits the findings of this project. While were interested in performing clustering-analysis for this project, our data primarily consists of categorical variables. As clustering-analysis can only be performed on numeric variables with quantitative meaning, we had to coerce some of our original categorical variables to have numeric values. This allowed us to successfully perform clustering-analysis, however, our clusters may have been more definitive and meaningful if we had been able to perform this analysis with truly quantitative variables.
+In addition, the coercion of categorical variables during our clustering-analysis limits the findings of this project. While we were interested in performing clustering analysis, our data primarily consists of categorical variables. As clustering analysis can only be performed on numeric variables with quantitative meaning, we had to coerce some of our original categorical variables to have numeric values. This allowed us to successfully perform clustering analysis, however, our clusters may have been more definitive and meaningful if we had been able to perform this analysis with truly quantitative variables.
 
-To expand upon this research in the future, we have several suggestions. First, it would be interesting to find pre-pandemic data which includes individual economic health questions like the ones asked in the COVID-Impact survey. By comparing data like this with data from the COVID-Impact survey, researchers would be able to determine the true impacts of COVID-19 on individual economic health more definitively. Next, it would be valuable to follow up with respondents to the COVID-Impact survey each year for five years. This would allow researchers to track and analyze the longer-term impacts of the pandemic on individual economic health. Finally, it would be useful collect quantitative data on individual economic health in the future by asking individuals to report numbers such as current salary and current amount of debt. Doing so would allow researchers to make stronger conclusions based on clustering-analysis.
+# Extensions
+
+To expand upon this research in the future, we have several suggestions. First, it would be interesting to find pre-pandemic data which includes individual economic health questions like the ones asked in the COVID-Impact survey. By comparing data like this with data from the COVID-Impact survey, researchers would be able to determine the true impacts of COVID-19 on individual economic health more definitively. Next, it would be valuable to follow up with respondents to the COVID-Impact survey each year for five years. This would allow researchers to track and analyze the longer-term impacts of the pandemic on individual economic health. Finally, it would be useful collect quantitative data on individual economic health in the future by asking individuals to report exact numbers for things like current salary and current amount of debt. Doing so would allow researchers to make stronger conclusions based on clustering analysis.
 
 # Conclusion
 
-In conclusion, both our clustering analysis and our post-clustering analysis provide interesting insights about the impact of COVID-19 on individual economic health. Through our clustering analysis, we discovered that groups of individuals were similar in their responses to questions concerning future employment confidence, age group and income bracket. With our post-clustering analysis, we learned that cluster assignment predicted interesting differences in responses to questions concerning racial background and level of food security. As economic recovery policies are being created and implemented, it is important that researchers continue to strive to fully understand the impact of COVID-19 on individual economic health. This understanding will inform the development and implementation of stimulus packages which will help those who have dealt with and are still dealing with the most extreme impacts of the pandemic.
+In conclusion, both our clustering analysis and our post-clustering analysis provide interesting insights about the impact of COVID-19 on individual economic health. Through our k-means clustering analysis, we discovered that groups of individuals were similar in their responses to questions concerning future employment confidence, age group and income bracket. With our post-clustering analysis, we learned that cluster assignment predicted interesting differences in responses to questions concerning racial background and level of food security. As economic recovery policies are being created and implemented, it is important that researchers continue to strive to fully understand the impact of COVID-19 on individual economic health. This understanding will inform the development and implementation of stimulus packages which will help those who have dealt with and are still dealing with the most extreme impacts of the pandemic.
 
 # Bibliography
 
